@@ -1,0 +1,52 @@
+<p-calendar
+  [(ngModel)]="date"
+  [appendTo]="'body'"
+  [iconDisplay]="'input'"
+  [showIcon]="true"
+  dateFormat="dd.mm.yy"
+/>
+
+<p-dropdown
+  [(ngModel)]="selectedCategory"
+  [appendTo]="'body'"
+  [filter]="true"
+  [options]="(dataService.categories$ | async) || []"
+  optionLabel="name"
+>
+  <ng-template pTemplate="filter" let-options="options">
+    <p-inputGroup>
+      <input
+        [(ngModel)]="newCategoryName"
+        pInputText
+        type="text"
+      />
+      <button
+        [disabled]="addNewCategoryDisabled"
+        (click)="onAddCategoryClick()"
+        icon="pi pi-plus"
+        pButton
+        size="small"
+      ></button>
+    </p-inputGroup>
+  </ng-template>
+</p-dropdown>
+
+<p-inputNumber
+  [(ngModel)]="price"
+  min="1"
+></p-inputNumber>
+
+<div class="buttons">
+  <p-button
+    [ngClass]="{'hidden': !canDelete}"
+    (click)="onDeleteClick()"
+    class="delete-button"
+    label="Удалить"
+  ></p-button>
+
+  <p-button
+    [disabled]="buttonDisabled"
+    (click)="onAcceptClick()"
+    label="Принять"
+  ></p-button>
+</div>

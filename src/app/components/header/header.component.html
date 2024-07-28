@@ -1,0 +1,7 @@
+<span class="p-buttonset">
+  <p-button
+    *ngFor="let tab of tabs"
+    [label]="tab.label"
+    (click)="onTabClick(tab.id)"
+  ></p-button>
+</span>

@@ -1,0 +1,40 @@
+<p-button
+  [outlined]="true"
+  (click)="onAddClick()"
+  label="Добавить"
+></p-button>
+
+<p-table
+  [rowHover]="true"
+  [scrollable]="true"
+  [sortOrder]="-1"
+  [value]="(dataService.expenses$ | async) || []"
+  dataKey="id"
+  scrollHeight="flex"
+  sortField="date"
+  styleClass="p-datatable-gridlines p-datatable-sm"
+>
+  <ng-template pTemplate="header">
+    <tr>
+      <th pSortableColumn="date" style="width: 35%">
+        Дата
+        <p-sortIcon field="date" />
+      </th>
+      <th pSortableColumn="categoryId" style="width: 35%">
+        Категория
+        <p-sortIcon field="categoryId" />
+      </th>
+      <th pSortableColumn="price" style="width: 30%">
+        Стоимость
+        <p-sortIcon field="price" />
+      </th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-item>
+    <tr (click)="onRowClick(item)">
+      <td>{{ item.date | date }}</td>
+      <td>{{ item.category.name }}</td>
+      <td>{{ item.price }}</td>
+    </tr>
+  </ng-template>
+</p-table>

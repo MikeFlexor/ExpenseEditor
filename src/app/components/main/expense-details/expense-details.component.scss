@@ -1,0 +1,34 @@
+:host {
+  display: flex;
+  flex-direction: column;
+
+  p-calendar, p-dropdown, p-inputNumber {
+    margin-bottom: 0.6rem;
+  }
+
+
+  ::ng-deep p-dropdown {
+    .p-dropdown {
+      width: 100% !important;
+    }
+  }
+  
+  ::ng-deep p-inputnumber {
+    .p-inputnumber {
+      width: 100% !important;
+    }
+  }
+
+  .buttons {
+    display: flex;
+    justify-content: flex-end;
+
+    .delete-button {
+      margin-right: 0.3rem;
+    }
+
+    .hidden {
+      display: none;
+    }
+  }
+}
