@@ -1,15 +1,16 @@
 import { Injectable } from '@angular/core';
-import { CategoryItem, ExpenseItem, SavedData } from '../models/models';
+import { Category, Expense, PivotTableItem, SavedData } from '../models/models';
 import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DataService {
-  categories$ = new BehaviorSubject<CategoryItem[]>([]);
-  expenses$ = new BehaviorSubject<ExpenseItem[]>([]);
+  categories$ = new BehaviorSubject<Category[]>([]);
+  expenses$ = new BehaviorSubject<Expense[]>([]);
+  totals$ = new BehaviorSubject<PivotTableItem[]>([]);
 
-  private defaultCategories: CategoryItem[] = [
+  private defaultCategories: Category[] = [
     { id: 0, name: 'Еда' },
     { id: 1, name: 'Коммунальные платежи' },
     { id: 2, name: 'Одежда' },
@@ -25,13 +26,13 @@ export class DataService {
     this.loadData();
   }
 
-  addExpense(expense: ExpenseItem): void {
+  addExpense(expense: Expense): void {
     this.expenseMaxId++;
     expense.id = this.expenseMaxId;
     this.expenses$.next([...this.expenses$.value, expense]);
   }
 
-  changeExpense(expense: ExpenseItem): void {
+  changeExpense(expense: Expense): void {
     const foundItem = this.expenses$.value.find((i) => i.id === expense.id);
     if (foundItem !== undefined) {
       foundItem.date = expense.date;
@@ -40,7 +41,7 @@ export class DataService {
     }
   }
 
-  deleteExpense(expense: ExpenseItem): void {
+  deleteExpense(expense: Expense): void {
     const index = this.expenses$.value.indexOf(expense);
     const newExpenses = [...this.expenses$.value];
     newExpenses.splice(index, 1);
@@ -49,11 +50,34 @@ export class DataService {
 
   addCategory(categoryName: string): void {
     this.categoryMaxId++;
-    const newCategory: CategoryItem = {
+    const newCategory: Category = {
       id: this.categoryMaxId,
       name: categoryName
     };
     this.categories$.next([...this.categories$.value, newCategory]);
+  }
+
+  countTotals(date: Date): void {
+    const startDate = new Date(date);
+    const endDate = new Date(new Date(startDate).setMonth(startDate.getMonth() + 1));
+    const expenses = this.expenses$.value.filter((i) => 
+      i.date.getTime() >= startDate.getTime() && i.date.getTime() < endDate.getTime()
+    );
+    const items: PivotTableItem[] = [];
+
+    for (const expense of expenses) {
+      const foundItem = items.find((i) => i.category.id === expense.category.id);
+      if (foundItem) {
+        foundItem.total += expense.price;
+      } else {
+        items.push({
+          category: expense.category,
+          total: expense.price
+        } as PivotTableItem);
+      }
+    }
+
+    this.totals$.next(items);
   }
 
   async saveData(): Promise<void> {

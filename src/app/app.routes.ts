@@ -2,9 +2,15 @@ import { Routes } from '@angular/router';
 
 export const routes: Routes = [
     {
-        path: 'main',
+        path: 'expenselist',
         loadComponent: async () => {
-            return (await import('./components/main/main.component')).MainComponent;
+            return (await import('./components/expense-list/expense-list.component')).ExpenseListComponent;
+        }
+    },
+    {
+        path: 'pivottable',
+        loadComponent: async () => {
+            return (await import('./components/pivot-table/pivot-table.component')).PivotTableComponent;
         }
     },
     {
@@ -16,7 +22,7 @@ export const routes: Routes = [
     {
         path: '**',
         loadComponent: async () => {
-            return (await import('./components/main/main.component')).MainComponent;
+            return (await import('./components/expense-list/expense-list.component')).ExpenseListComponent;
         }
     }
 ];

@@ -1,0 +1,58 @@
+<div>
+  <p-calendar
+    [(ngModel)]="date"
+    [appendTo]="'body'"
+    [iconDisplay]="'input'"
+    [readonlyInput]="true"
+    [showIcon]="true"
+    dateFormat="mm.yy"
+    view="month"
+  />
+
+  <p-button
+    [disabled]="date === undefined"
+    [outlined]="true"
+    (click)="onFormClick()"
+    label="Сформировать"
+  ></p-button>
+</div>
+
+<ng-container *ngIf="(dataService.totals$ | async)?.length">
+  <p-table
+    [rowHover]="true"
+    [scrollable]="true"
+    [value]="(dataService.totals$ | async) || []"
+    dataKey="id"
+    scrollHeight="flex"
+    styleClass="p-datatable-gridlines p-datatable-sm"
+  >
+    <ng-template pTemplate="header">
+      <tr>
+        <th style="width: 50%">
+          Категория
+        </th>
+        <th style="width: 50%">
+          Сумма
+        </th>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="body" let-item>
+      <tr>
+        <td>{{ item.category.name }}</td>
+        <td>{{ item.total }}</td>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="footer">
+      <tr>
+        <td>
+          <span style="float: right;">
+            Итого:
+          </span>
+        </td>
+        <td>{{ summaryTotal }}</td>
+      </tr>
+    </ng-template>
+  </p-table>
+</ng-container>

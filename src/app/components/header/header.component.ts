@@ -17,8 +17,9 @@ import { ButtonModule } from 'primeng/button';
 })
 export class HeaderComponent {
   readonly tabs: Tab[] = [
-    { id: 0, label: 'Список расходов', route: 'main' },
-    { id: 1, label: 'О программе', route: 'about' },
+    { id: 0, label: 'Список расходов', route: 'expenselist' },
+    { id: 1, label: 'Сводная таблица', route: 'pivottable' },
+    { id: 2, label: 'О программе', route: 'about' },
   ];
 
   constructor(private router: Router) {}

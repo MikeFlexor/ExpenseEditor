@@ -1,0 +1,13 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+
+  p-table {
+    min-height: 0;
+  }
+
+  p-calendar {
+    margin-right: 0.3rem;
+  }
+}

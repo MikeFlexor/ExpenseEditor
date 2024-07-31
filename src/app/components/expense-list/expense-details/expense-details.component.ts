@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CalendarModule } from 'primeng/calendar';
-import { CategoryItem, ExpenseDetailsData, ExpenseItem } from '../../../models/models';
+import { Category, ExpenseDetailsData, Expense } from '../../../models/models';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { DropdownModule } from 'primeng/dropdown';
 import { InputNumberModule } from 'primeng/inputnumber';
@@ -41,7 +41,7 @@ export class ExpenseDetailsComponent implements OnInit {
   date: Date | undefined;
   newCategoryName: string = '';
   price: number | undefined;
-  selectedCategory: CategoryItem | undefined;
+  selectedCategory: Category | undefined;
 
   constructor(
     public dataService: DataService,
@@ -50,7 +50,7 @@ export class ExpenseDetailsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    const item: ExpenseItem = this.config.data;
+    const item: Expense = this.config.data;
     if (item !== undefined) {
       this.date = new Date(item.date);
       this.selectedCategory = this.dataService.categories$.value

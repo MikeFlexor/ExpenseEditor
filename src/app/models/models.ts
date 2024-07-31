@@ -4,24 +4,29 @@ export interface Tab {
   route: string;
 }
 
-export interface ExpenseItem {
+export interface Expense {
   id: number;
   date: Date;
-  category: CategoryItem;
+  category: Category;
   price: number;
 }
 
-export interface CategoryItem {
+export interface Category {
   id: number;
   name: string;
 }
 
 export interface ExpenseDetailsData {
-  expense: ExpenseItem | undefined;
+  expense: Expense | undefined;
   delete: boolean | undefined;
 }
 
 export interface SavedData {
-  categories: CategoryItem[];
-  expenses: ExpenseItem[];
+  categories: Category[];
+  expenses: Expense[];
+}
+
+export interface PivotTableItem {
+  category: Category;
+  total: number;
 }

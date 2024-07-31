@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy } from '@angular/core';
 import { TableModule } from 'primeng/table';
-import { ExpenseDetailsData, ExpenseItem } from '../../models/models';
+import { ExpenseDetailsData, Expense } from '../../models/models';
 import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
@@ -10,7 +10,7 @@ import { ExpenseDetailsComponent } from './expense-details/expense-details.compo
 import { DataService } from '../../services/data.service';
 
 @Component({
-  selector: 'app-main',
+  selector: 'app-expense-list',
   standalone: true,
   imports: [
     CommonModule,
@@ -20,11 +20,11 @@ import { DataService } from '../../services/data.service';
     InputTextModule
   ],
   providers: [DialogService],
-  templateUrl: './main.component.html',
-  styleUrl: './main.component.scss',
+  templateUrl: './expense-list.component.html',
+  styleUrl: './expense-list.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MainComponent implements OnDestroy {
+export class ExpenseListComponent implements OnDestroy {
   dialogRef: DynamicDialogRef | undefined;
 
   constructor(
@@ -43,11 +43,11 @@ export class MainComponent implements OnDestroy {
     }
   }
 
-  onRowClick(item: ExpenseItem): void {
+  onRowClick(item: Expense): void {
     this.openDetailsWindow(item);
   }
 
-  private openDetailsWindow(item: ExpenseItem | undefined): void {
+  private openDetailsWindow(item: Expense | undefined): void {
     // Открываем окно подробностей по трате
     this.dialogRef = this.dialogService.open(ExpenseDetailsComponent, {
       data: item,
