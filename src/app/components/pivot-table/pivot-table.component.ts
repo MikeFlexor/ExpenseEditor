@@ -1,11 +1,18 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, ChangeDetectionStrategy, Component, TemplateRef, ViewChild, ViewContainerRef } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  TemplateRef,
+  ViewChild,
+  ViewContainerRef
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { DataService } from '../../services/data.service';
 import { CalendarModule } from 'primeng/calendar';
 import { TableModule } from 'primeng/table';
 import { TemplatePortal } from '@angular/cdk/portal';
-import { PortalService } from '../../services/portal.service';
+import { NavigateService } from '../../services/navigate.service';
 
 @Component({
   selector: 'app-pivot-table',
@@ -33,13 +40,13 @@ export class PivotTableComponent implements AfterViewInit {
 
   constructor(
     public dataService: DataService,
-    private portalService: PortalService,
+    private navigateService: NavigateService,
     private viewContainerRef: ViewContainerRef
   ) {}
 
   ngAfterViewInit(): void {
     if (this.portalContent) {
-      this.portalService.setTemplatePortal(
+      this.navigateService.setTemplatePortal(
         new TemplatePortal(this.portalContent, this.viewContainerRef)
       );
     }

@@ -1,7 +1,7 @@
 <p-button
   *ngFor="let tab of tabs"
   [label]="tab.label"
-  [class.selected]="tab.selected"
+  [class.selected]="isSelectedTab(tab.id)"
   [outlined]="true"
   (click)="onTabClick(tab.id)"
 ></p-button>

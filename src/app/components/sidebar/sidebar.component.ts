@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
 import { CdkPortalOutlet, PortalModule } from '@angular/cdk/portal';
-import { PortalService } from '../../services/portal.service';
+import { NavigateService } from '../../services/navigate.service';
 import { NavigatorComponent } from "./navigator/navigator.component";
 
 @Component({
@@ -19,5 +19,5 @@ import { NavigatorComponent } from "./navigator/navigator.component";
 export class SidebarComponent {
   @ViewChild(CdkPortalOutlet) portalHost!: CdkPortalOutlet;
 
-  constructor(public portalService: PortalService) {}
+  constructor(public navigateService: NavigateService) {}
 }

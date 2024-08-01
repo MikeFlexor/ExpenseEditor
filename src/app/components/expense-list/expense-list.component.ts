@@ -18,7 +18,7 @@ import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { ExpenseDetailsComponent } from './expense-details/expense-details.component';
 import { DataService } from '../../services/data.service';
 import { TemplatePortal } from '@angular/cdk/portal';
-import { PortalService } from '../../services/portal.service';
+import { NavigateService } from '../../services/navigate.service';
 
 @Component({
   selector: 'app-expense-list',
@@ -43,13 +43,13 @@ export class ExpenseListComponent implements AfterViewInit, OnDestroy {
     public dataService: DataService,
     private dialogService: DialogService,
     private cdr: ChangeDetectorRef,
-    private portalService: PortalService,
+    private navigateService: NavigateService,
     private viewContainerRef: ViewContainerRef
   ) {}
 
   ngAfterViewInit(): void {
     if (this.portalContent) {
-      this.portalService.setTemplatePortal(
+      this.navigateService.setTemplatePortal(
         new TemplatePortal(this.portalContent, this.viewContainerRef)
       );
     }
