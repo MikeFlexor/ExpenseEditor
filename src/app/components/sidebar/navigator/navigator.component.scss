@@ -1,0 +1,21 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  border-bottom: 1px solid #81a1c1;
+
+  ::ng-deep p-button {
+    button {
+      border-radius: 0 !important;
+      border: 0 !important;
+      width: 100% !important;
+
+      &:hover {
+        outline: 1px solid #81a1c1 !important;
+      }
+    }
+
+    &.selected {
+      background-color: #d8dee9 !important;
+    }
+  }
+}

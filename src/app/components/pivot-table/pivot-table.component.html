@@ -1,4 +1,4 @@
-<div>
+<ng-template #portalContent>
   <p-calendar
     [(ngModel)]="date"
     [appendTo]="'body'"
@@ -13,9 +13,9 @@
     [disabled]="date === undefined"
     [outlined]="true"
     (click)="onFormClick()"
-    label="Сформировать"
+    label="Сформировать сводную таблицу"
   ></p-button>
-</div>
+</ng-template>
 
 <ng-container *ngIf="(dataService.totals$ | async)?.length">
   <p-table

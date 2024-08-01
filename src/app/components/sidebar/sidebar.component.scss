@@ -1,0 +1,25 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  width: 400px;
+  border-right: 1px solid #81a1c1;
+
+  .filters {
+    display: flex;
+    flex-direction: column;
+    padding: 8px;
+    grid-gap: 8px;
+
+    ::ng-deep p-button {
+      .p-button {
+        width: 100% !important;
+      }
+    }
+
+    ::ng-deep p-calendar {
+      .p-calendar {
+        width: 100% !important;
+      }
+    }
+  }
+}

@@ -1,5 +1,14 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  OnDestroy,
+  TemplateRef,
+  ViewChild,
+  ViewContainerRef
+} from '@angular/core';
 import { TableModule } from 'primeng/table';
 import { ExpenseDetailsData, Expense } from '../../models/models';
 import { FormsModule } from '@angular/forms';
@@ -8,6 +17,8 @@ import { InputTextModule } from 'primeng/inputtext';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { ExpenseDetailsComponent } from './expense-details/expense-details.component';
 import { DataService } from '../../services/data.service';
+import { TemplatePortal } from '@angular/cdk/portal';
+import { PortalService } from '../../services/portal.service';
 
 @Component({
   selector: 'app-expense-list',
@@ -24,14 +35,25 @@ import { DataService } from '../../services/data.service';
   styleUrl: './expense-list.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ExpenseListComponent implements OnDestroy {
+export class ExpenseListComponent implements AfterViewInit, OnDestroy {
   dialogRef: DynamicDialogRef | undefined;
+  @ViewChild('portalContent') portalContent: TemplateRef<unknown> | undefined;
 
   constructor(
     public dataService: DataService,
     private dialogService: DialogService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private portalService: PortalService,
+    private viewContainerRef: ViewContainerRef
   ) {}
+
+  ngAfterViewInit(): void {
+    if (this.portalContent) {
+      this.portalService.setTemplatePortal(
+        new TemplatePortal(this.portalContent, this.viewContainerRef)
+      );
+    }
+  }
 
   onAddClick(): void {
     this.openDetailsWindow(undefined);

@@ -2,6 +2,7 @@ export interface Tab {
   id: number;
   label: string;
   route: string;
+  selected?: boolean;
 }
 
 export interface Expense {
