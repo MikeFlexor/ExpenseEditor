@@ -6,7 +6,7 @@ import { CommonModule } from '@angular/common';
 import { ExpenseListComponent } from './components/expense-list/expense-list.component';
 import { PivotTableComponent } from './components/pivot-table/pivot-table.component';
 import { SettingsComponent } from './components/settings/settings.component';
-import { NavigateService } from './services/navigate.service';
+import { DataService } from './services/data.service';
 
 @Component({
   selector: 'app-root',
@@ -25,7 +25,7 @@ import { NavigateService } from './services/navigate.service';
 export class AppComponent {
   title = 'Expense editor';
 
-  constructor(public navigateService: NavigateService, private primengConfig: PrimeNGConfig) {
+  constructor(public dataService: DataService, private primengConfig: PrimeNGConfig) {
     this.primengConfig.setTranslation({
       firstDayOfWeek: 1,
       dayNames: ["Воскресенье", "Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота"],

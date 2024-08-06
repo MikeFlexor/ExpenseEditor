@@ -1,58 +1,37 @@
 <ng-template #portalContent>
   <p-calendar
-    [(ngModel)]="date"
     [appendTo]="'body'"
-    [iconDisplay]="'input'"
-    [readonlyInput]="true"
+    [ngModel]="dataService.selectedDate$ | async"
+    [showClear]="true"
     [showIcon]="true"
+    [readonlyInput]="true"
+    (ngModelChange)="onDateChange($event)"
     dateFormat="mm.yy"
     view="month"
   />
-
-  <p-button
-    [disabled]="date === undefined"
-    [outlined]="true"
-    (click)="onFormClick()"
-    label="Сформировать сводную таблицу"
-  ></p-button>
 </ng-template>
 
-<ng-container *ngIf="(dataService.totals$ | async)?.length">
-  <p-table
-    [rowHover]="true"
-    [scrollable]="true"
-    [value]="(dataService.totals$ | async) || []"
-    dataKey="id"
-    scrollHeight="flex"
-    styleClass="p-datatable-gridlines p-datatable-sm"
-  >
-    <ng-template pTemplate="header">
-      <tr>
-        <th style="width: 50%">
-          Категория
-        </th>
-        <th style="width: 50%">
-          Сумма
-        </th>
-      </tr>
-    </ng-template>
+<div class="totals-container">
+  <ng-container *ngIf="dataService.selectedDate$ | async; else emptyTotalsTemplate">
+    <app-totals
+      [date]="dataService.selectedDate$ | async"
+      [items]="(dataService.totals$ | async) || []"
+    ></app-totals>
+  </ng-container>
+  <ng-template #emptyTotalsTemplate>
+    <app-label [text]="emptyTotalsText"></app-label>
+  </ng-template>
+</div>
 
-    <ng-template pTemplate="body" let-item>
-      <tr>
-        <td>{{ item.category.name }}</td>
-        <td>{{ item.total }}</td>
-      </tr>
+<div class="category-details-container">
+  <ng-container *ngIf="dataService.selectedDate$ | async">
+    <ng-container *ngIf="dataService.totalsSelectedCategory$ | async; else emptyCategoryDetailsTemplate">
+      <app-category-details
+        [items]="(dataService.categoryExpenses$ | async) || []"
+      ></app-category-details>
+    </ng-container>
+    <ng-template #emptyCategoryDetailsTemplate>
+      <app-label [text]="emptyCategoryDetailsText"></app-label>
     </ng-template>
-
-    <ng-template pTemplate="footer">
-      <tr>
-        <td>
-          <span style="float: right;">
-            Итого:
-          </span>
-        </td>
-        <td>{{ summaryTotal }}</td>
-      </tr>
-    </ng-template>
-  </p-table>
-</ng-container>
+  </ng-container>
+</div>

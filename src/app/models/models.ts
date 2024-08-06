@@ -25,7 +25,7 @@ export interface SavedData {
   expenses: Expense[];
 }
 
-export interface PivotTableItem {
+export interface TotalsItem {
   category: Category;
   total: number;
 }

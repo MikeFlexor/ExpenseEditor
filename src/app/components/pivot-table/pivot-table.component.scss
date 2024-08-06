@@ -1,13 +1,14 @@
 :host {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   height: 100%;
 
-  p-table {
-    min-height: 0;
+  .totals-container {
+    width: 50%;
+    border-right: 1px solid #81a1c1;
   }
 
-  p-calendar {
-    margin-right: 0.3rem;
+  .category-details-container {
+    width: 50%;
   }
 }

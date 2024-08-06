@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { Tab } from '../../../models/models';
-import { NavigateService } from '../../../services/navigate.service';
+import { DataService } from '../../../services/data.service';
 
 @Component({
   selector: 'app-navigator',
@@ -22,13 +22,13 @@ export class NavigatorComponent {
     { id: 2, label: 'Настройки' },
   ];
 
-  constructor(private navigateService: NavigateService) {}
+  constructor(private dataService: DataService) {}
 
   isSelectedTab(id: number) {
-    return this.navigateService.selectedTabId$.value === id;
+    return this.dataService.selectedTabId$.value === id;
   }
 
   onTabClick(id: number): void {
-    this.navigateService.setSelectedTabId(id);
+    this.dataService.setSelectedTabId(id);
   }
 }

@@ -18,7 +18,6 @@ import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { ExpenseDetailsComponent } from './expense-details/expense-details.component';
 import { DataService } from '../../services/data.service';
 import { TemplatePortal } from '@angular/cdk/portal';
-import { NavigateService } from '../../services/navigate.service';
 
 @Component({
   selector: 'app-expense-list',
@@ -38,25 +37,21 @@ import { NavigateService } from '../../services/navigate.service';
 export class ExpenseListComponent implements AfterViewInit, OnDestroy {
   dialogRef: DynamicDialogRef | undefined;
   @ViewChild('portalContent') portalContent: TemplateRef<unknown> | undefined;
+  selectedExpense: Expense | null = null;
 
   constructor(
     public dataService: DataService,
     private dialogService: DialogService,
     private cdr: ChangeDetectorRef,
-    private navigateService: NavigateService,
     private viewContainerRef: ViewContainerRef
   ) {}
 
   ngAfterViewInit(): void {
     if (this.portalContent) {
-      this.navigateService.setTemplatePortal(
+      this.dataService.setTemplatePortal(
         new TemplatePortal(this.portalContent, this.viewContainerRef)
       );
     }
-  }
-
-  onAddClick(): void {
-    this.openDetailsWindow(undefined);
   }
 
   ngOnDestroy() {
@@ -65,15 +60,28 @@ export class ExpenseListComponent implements AfterViewInit, OnDestroy {
     }
   }
 
-  onRowClick(item: Expense): void {
-    this.openDetailsWindow(item);
+  onAddClick(): void {
+    this.openDetailsWindow(null);
   }
 
-  private openDetailsWindow(item: Expense | undefined): void {
+  onDeleteClick(item: Expense | null): void {
+    if (item) {
+      this.dataService.deleteExpense(item);
+      this.selectedExpense = null;
+    }
+  }
+
+  onRowDblClick(item: Expense | null): void {
+    if (item) {
+      this.openDetailsWindow(item);
+    }
+  }
+
+  private openDetailsWindow(item: Expense | null): void {
     // Открываем окно подробностей по трате
     this.dialogRef = this.dialogService.open(ExpenseDetailsComponent, {
       data: item,
-      header: item === undefined ? 'Добавить трату' : 'Изменить трату',
+      header: item === null ? 'Добавить трату' : 'Изменить трату',
       focusOnShow: false
     });
 
@@ -85,9 +93,7 @@ export class ExpenseListComponent implements AfterViewInit, OnDestroy {
       }
       // Если передан признак удаления, то удаляем трату
       if (data.delete) {
-        if (item) {
-          this.dataService.deleteExpense(item);
-        }
+        this.onDeleteClick(item);
       } else if (data.expense) {
         // Если при открытии окна передали данные по трате, то изменяем его значения
         if (item) {

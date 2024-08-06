@@ -12,3 +12,9 @@ body {
   overflow: hidden;
   font-size: 14px;
 }
+
+p-table {
+  width: 100%;
+  min-height: 0;
+  user-select: none;
+}

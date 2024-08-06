@@ -12,7 +12,9 @@ import { DataService } from '../../services/data.service';
 import { CalendarModule } from 'primeng/calendar';
 import { TableModule } from 'primeng/table';
 import { TemplatePortal } from '@angular/cdk/portal';
-import { NavigateService } from '../../services/navigate.service';
+import { CategoryDetailsComponent } from './category-details/category-details.component';
+import { TotalsComponent } from './totals/totals.component';
+import { LabelComponent } from "../label/label.component";
 
 @Component({
   selector: 'app-pivot-table',
@@ -21,41 +23,34 @@ import { NavigateService } from '../../services/navigate.service';
     CommonModule,
     FormsModule,
     CalendarModule,
-    TableModule
-  ],
+    TableModule,
+    TotalsComponent,
+    CategoryDetailsComponent,
+    LabelComponent
+],
   templateUrl: './pivot-table.component.html',
   styleUrl: './pivot-table.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PivotTableComponent implements AfterViewInit {
-  date: Date | undefined;
-  get summaryTotal() {
-    let total = 0;
-    for (const item of this.dataService.totals$.value) {
-      total += item.total;
-    }
-    return total;
-  }
+  emptyCategoryDetailsText: string = 'Выберите категорию для отображения списка трат по ней';
+  emptyTotalsText: string = 'Выберите дату для отображения сводных данных';
   @ViewChild('portalContent') portalContent: TemplateRef<unknown> | undefined;
 
   constructor(
     public dataService: DataService,
-    private navigateService: NavigateService,
     private viewContainerRef: ViewContainerRef
   ) {}
 
   ngAfterViewInit(): void {
     if (this.portalContent) {
-      this.navigateService.setTemplatePortal(
+      this.dataService.setTemplatePortal(
         new TemplatePortal(this.portalContent, this.viewContainerRef)
       );
     }
   }
 
-  onFormClick(): void {
-    if (!this.date) {
-      return;
-    }
-    this.dataService.countTotals(this.date);
+  onDateChange(date: Date): void {
+    this.dataService.setSelectedDate(date);
   }
 }

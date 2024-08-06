@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, ChangeDetectionStrategy, Component, ViewContainerRef } from '@angular/core';
-import { NavigateService } from '../../services/navigate.service';
+import { AfterViewInit, ChangeDetectionStrategy, Component } from '@angular/core';
+import { DataService } from '../../services/data.service';
 
 @Component({
   selector: 'app-settings',
@@ -13,9 +13,9 @@ import { NavigateService } from '../../services/navigate.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SettingsComponent implements AfterViewInit {
-  constructor(private navigateService: NavigateService) {}
+  constructor(private dataService: DataService) {}
 
   ngAfterViewInit(): void {
-    this.navigateService.setTemplatePortal(null);
+    this.dataService.setTemplatePortal(null);
   }
 }

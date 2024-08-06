@@ -33,7 +33,7 @@ export class ExpenseDetailsComponent implements OnInit {
       this.price === undefined;
   }
   get canDelete() {
-    return this.config.data !== undefined;
+    return this.config.data !== null;
   }
   get addNewCategoryDisabled() {
     return this.newCategoryName.length === 0;
@@ -51,7 +51,7 @@ export class ExpenseDetailsComponent implements OnInit {
 
   ngOnInit(): void {
     const item: Expense = this.config.data;
-    if (item !== undefined) {
+    if (item !== null) {
       this.date = new Date(item.date);
       this.selectedCategory = this.dataService.categories$.value
         .find((i) => i.id === item.category.id);

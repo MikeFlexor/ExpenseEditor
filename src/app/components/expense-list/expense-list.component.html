@@ -4,15 +4,31 @@
     (click)="onAddClick()"
     label="Добавить трату"
   ></p-button>
+
+  <p-button
+    [disabled]="!selectedExpense"
+    [outlined]="true"
+    (click)="onRowDblClick(selectedExpense)"
+    label="Изменить трату"
+  ></p-button>
+
+  <p-button
+    [disabled]="!selectedExpense"
+    [outlined]="true"
+    (click)="onDeleteClick(selectedExpense)"
+    label="Удалить трату"
+  ></p-button>
 </ng-template>
 
 <p-table
+  [(selection)]="selectedExpense"
   [rowHover]="true"
   [scrollable]="true"
   [sortOrder]="-1"
   [value]="(dataService.expenses$ | async) || []"
   dataKey="id"
   scrollHeight="flex"
+  selectionMode="single" 
   sortField="date"
   styleClass="p-datatable-gridlines p-datatable-sm"
 >
@@ -33,8 +49,8 @@
     </tr>
   </ng-template>
   <ng-template pTemplate="body" let-item>
-    <tr (click)="onRowClick(item)">
-      <td>{{ item.date | date : 'longDate' }}</td>
+    <tr [pSelectableRow]="item" (dblclick)="onRowDblClick(item)">
+      <td>{{ item.date | date : 'dd.MM.yyyy' }}</td>
       <td>{{ item.category.name }}</td>
       <td>{{ item.price }}</td>
     </tr>

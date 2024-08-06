@@ -1,6 +1,6 @@
 <app-sidebar></app-sidebar>
 <div class="content">
-  <ng-container [ngSwitch]="navigateService.selectedTabId$ | async">
+  <ng-container [ngSwitch]="dataService.selectedTabId$ | async">
     <app-expense-list *ngSwitchCase="0"></app-expense-list>
     <app-pivot-table *ngSwitchCase="1"></app-pivot-table>
     <app-settings *ngSwitchCase="2"></app-settings>
