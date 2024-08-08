@@ -1,0 +1,12 @@
+:host {
+  display: flex;
+  flex-direction: row;
+  grid-gap: 8px;
+
+  .edit-container {
+    display: flex;
+    flex-direction: column;
+    width: 300px;
+    grid-gap: 8px;
+  }
+}

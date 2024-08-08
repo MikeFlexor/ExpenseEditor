@@ -1,0 +1,6 @@
+<p-fieldset [toggleable]="true" legend="Переименование категорий">
+  <app-category-edit
+    [categories]="(dataService.categories$ | async) || []"
+    (categoryRename)="onCategoryChange($event)"
+  ></app-category-edit>
+</p-fieldset>

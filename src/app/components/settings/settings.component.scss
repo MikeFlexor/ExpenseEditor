@@ -1,3 +1,18 @@
 :host {
-  display: block;
+  display: flex;
+  flex-direction: column;
+  padding: 8px;
+  grid-gap: 8px;
+
+  ::ng-deep fieldset {
+    padding: 4px 8px !important;
+
+    .p-ripple {
+      padding: 8px !important;
+    }
+
+    .p-fieldset-content {
+      padding: 4px 0 !important;
+    }
+  }
 }

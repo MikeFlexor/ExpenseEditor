@@ -95,6 +95,23 @@ export class DataService {
     this.updateCategoryExpenses();
   }
 
+  updateCategory(category: Category): void {
+    // Ищем категорию и обновляем имя
+    const foundCategory = this.categories$.value.find((i) => i.id === category.id);
+    if (foundCategory !== undefined) {
+      foundCategory.name = category.name;
+    }
+
+    // Обновляем имена категорий, привязанных к тратам
+    for (const expense of this.expenses$.value) {
+      if (expense.category.id === category.id) {
+        expense.category.name = category.name;
+      }
+    }
+
+    this.saveData();
+  }
+
   async saveData(): Promise<void> {
     const data: SavedData = {
       categories: this.categories$.value,

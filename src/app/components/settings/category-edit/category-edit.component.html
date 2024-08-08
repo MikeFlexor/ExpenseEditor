@@ -1,0 +1,22 @@
+<p-listbox
+  [(ngModel)]="selectedCategory"
+  [options]="categories"
+  [style]="{'width': '500px'}"
+  optionLabel="name"
+/>
+
+<div class="edit-container">
+  <input
+    #categoryInput
+    [ngModel]="selectedCategory?.name"
+    [disabled]="!selectedCategory"
+    pInputText
+    type="text"
+  />
+
+  <p-button
+    [disabled]="!selectedCategory || !categoryInput.value.length"
+    (click)="onRenameClick(categoryInput.value)"
+    label="Принять"
+  ></p-button>
+</div>

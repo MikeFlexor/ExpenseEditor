@@ -13,7 +13,6 @@ import { TableModule } from 'primeng/table';
 import { ExpenseDetailsData, Expense } from '../../models/models';
 import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
-import { InputTextModule } from 'primeng/inputtext';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { ExpenseDetailsComponent } from './expense-details/expense-details.component';
 import { DataService } from '../../services/data.service';
@@ -26,8 +25,7 @@ import { TemplatePortal } from '@angular/cdk/portal';
     CommonModule,
     TableModule,
     FormsModule,
-    ButtonModule,
-    InputTextModule
+    ButtonModule
   ],
   providers: [DialogService],
   templateUrl: './expense-list.component.html',
