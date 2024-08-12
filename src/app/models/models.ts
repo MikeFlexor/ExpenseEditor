@@ -20,11 +20,6 @@ export interface ExpenseDetailsData {
   delete: boolean | undefined;
 }
 
-export interface SavedData {
-  categories: Category[];
-  expenses: Expense[];
-}
-
 export interface TotalsItem {
   category: Category;
   total: number;

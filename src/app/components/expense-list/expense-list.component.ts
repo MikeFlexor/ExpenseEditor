@@ -2,7 +2,6 @@ import { CommonModule } from '@angular/common';
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
-  ChangeDetectorRef,
   Component,
   OnDestroy,
   TemplateRef,
@@ -40,7 +39,6 @@ export class ExpenseListComponent implements AfterViewInit, OnDestroy {
   constructor(
     public dataService: DataService,
     private dialogService: DialogService,
-    private cdr: ChangeDetectorRef,
     private viewContainerRef: ViewContainerRef
   ) {}
 
@@ -102,9 +100,6 @@ export class ExpenseListComponent implements AfterViewInit, OnDestroy {
           this.dataService.addExpense(data.expense);
         }
       }
-
-      this.cdr.markForCheck();
-      this.dataService.saveData();
     });
   }
 }

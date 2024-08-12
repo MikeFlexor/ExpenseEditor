@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CalendarModule } from 'primeng/calendar';
 import { Category, ExpenseDetailsData, Expense } from '../../../models/models';
@@ -9,6 +9,7 @@ import { InputNumberModule } from 'primeng/inputnumber';
 import { InputTextModule } from 'primeng/inputtext';
 import { InputGroupModule } from 'primeng/inputgroup';
 import { DataService } from '../../../services/data.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-expense-details',
@@ -26,7 +27,7 @@ import { DataService } from '../../../services/data.service';
   styleUrl: './expense-details.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ExpenseDetailsComponent implements OnInit {
+export class ExpenseDetailsComponent implements OnDestroy, OnInit {
   get buttonDisabled() {
     return this.date === undefined ||
       this.selectedCategory === undefined ||
@@ -42,6 +43,7 @@ export class ExpenseDetailsComponent implements OnInit {
   newCategoryName: string = '';
   price: number | undefined;
   selectedCategory: Category | undefined;
+  subscription: Subscription = new Subscription();
 
   constructor(
     public dataService: DataService,
@@ -49,12 +51,19 @@ export class ExpenseDetailsComponent implements OnInit {
     private dialogRef: DynamicDialogRef
   ) {}
 
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
+  }
+
   ngOnInit(): void {
     const item: Expense = this.config.data;
     if (item !== null) {
       this.date = new Date(item.date);
-      this.selectedCategory = this.dataService.categories$.value
-        .find((i) => i.id === item.category.id);
+      this.subscription.add(
+        this.dataService.categories$.subscribe((categories) => {
+          this.selectedCategory = categories.find((i) => i.id === item.category.id);
+        })
+      );
       this.price = item.price;
     }
   }
