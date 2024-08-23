@@ -1,0 +1,24 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  grid-gap: 8px;
+
+  div {
+    display: flex;
+    flex-direction: row;
+    grid-gap: 8px;
+  }
+
+  ::ng-deep p-dropdown {
+    width: 300px !important;
+
+    .p-dropdown {
+      width: 100% !important;
+      height: 100% !important;
+    }
+  }
+
+  input {
+    width: 300px;
+  }
+}

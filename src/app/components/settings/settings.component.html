@@ -6,5 +6,11 @@
 </p-fieldset>
 
 <p-fieldset [toggleable]="true" legend="Хранение данных">
-  
+  <app-db-edit
+    [dbNames]="(dataService.dbNames$ | async) || []"
+    [selectedDb]="dataService.db?.name"
+    (addDb)="onDbAdd($event)"
+    (changeDb)="onDbChange($event)"
+    (deleteDb)="onDbDelete($event)"
+  ></app-db-edit>
 </p-fieldset>

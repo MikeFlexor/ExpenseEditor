@@ -1,0 +1,34 @@
+<div>
+  <p-dropdown
+    [(ngModel)]="selectedDb"
+    [appendTo]="'body'"
+    [options]="dbNames"
+  ></p-dropdown>
+
+  <input
+    #dbNameInput
+    [(ngModel)]="dbName"
+    pInputText
+    type="text"
+  />
+</div>
+
+<div>
+  <p-button
+    [disabled]="!selectedDb || selectedDb === currentDb"
+    (click)="onChangeClick()"
+    label="Переключиться на выбранную базу"
+  ></p-button>
+
+  <p-button
+    [disabled]="!selectedDb"
+    (click)="onDeleteClick()"
+    label="Удалить выбранную базу"
+  ></p-button>
+
+  <p-button
+    [disabled]="!dbName.length"
+    (click)="onAddClick()"
+    label="Добавить новую базу"
+  ></p-button>
+</div>

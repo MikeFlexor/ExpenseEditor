@@ -7,6 +7,7 @@ import { ExpenseListComponent } from './components/expense-list/expense-list.com
 import { PivotTableComponent } from './components/pivot-table/pivot-table.component';
 import { SettingsComponent } from './components/settings/settings.component';
 import { DataService } from './services/data.service';
+import { DbNameEnteringComponent } from './components/db-name-entering/db-name-entering.component';
 
 @Component({
   selector: 'app-root',
@@ -17,8 +18,9 @@ import { DataService } from './services/data.service';
     SidebarComponent,
     ExpenseListComponent,
     PivotTableComponent,
-    SettingsComponent
-  ],
+    SettingsComponent,
+    DbNameEnteringComponent
+],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })

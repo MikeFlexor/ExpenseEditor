@@ -1,8 +1,14 @@
-<app-sidebar></app-sidebar>
-<div class="content">
-  <ng-container [ngSwitch]="dataService.selectedTabId$ | async">
-    <app-expense-list *ngSwitchCase="0"></app-expense-list>
-    <app-pivot-table *ngSwitchCase="1"></app-pivot-table>
-    <app-settings *ngSwitchCase="2"></app-settings>
-  </ng-container>
-</div>
+<ng-container *ngIf="!(dataService.showDbNameEntering$ | async); else showDbNameEnteringTemplate">
+  <app-sidebar></app-sidebar>
+  <div class="content">
+    <ng-container [ngSwitch]="dataService.selectedTabId$ | async">
+      <app-expense-list *ngSwitchCase="0"></app-expense-list>
+      <app-pivot-table *ngSwitchCase="1"></app-pivot-table>
+      <app-settings *ngSwitchCase="2"></app-settings>
+    </ng-container>
+  </div>
+</ng-container>
+
+<ng-template #showDbNameEnteringTemplate>
+  <app-db-name-entering></app-db-name-entering>
+</ng-template>

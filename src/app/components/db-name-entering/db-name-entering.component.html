@@ -1,0 +1,14 @@
+<span>Введите название нового хранилища данных</span>
+
+<input
+  #dbNameInput
+  [(ngModel)]="dbName"
+  pInputText
+  type="text"
+/>
+
+<p-button
+  [disabled]="!dbNameInput.value.length"
+  (click)="onAcceptClick()"
+  label="Принять"
+></p-button>

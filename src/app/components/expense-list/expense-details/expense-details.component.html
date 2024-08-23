@@ -2,6 +2,7 @@
   [(ngModel)]="date"
   [appendTo]="'body'"
   [iconDisplay]="'input'"
+  [placeholder]="'Выберите дату'"
   [readonlyInput]="true"
   [showIcon]="true"
   dateFormat="dd.mm.yy"
@@ -10,8 +11,10 @@
 <p-dropdown
   [(ngModel)]="selectedCategory"
   [appendTo]="'body'"
+  [emptyMessage]="'Нет категорий'"
   [filter]="true"
   [options]="(dataService.categories$ | async) || []"
+  [placeholder]="'Выберите категорию'"
   optionLabel="name"
 >
   <ng-template pTemplate="filter" let-options="options">
@@ -34,6 +37,7 @@
 
 <p-inputNumber
   [(ngModel)]="price"
+  [placeholder]="'Введите стоимость'"
   min="1"
 ></p-inputNumber>
 
