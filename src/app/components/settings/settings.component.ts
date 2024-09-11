@@ -3,7 +3,7 @@ import { AfterViewInit, ChangeDetectionStrategy, Component } from '@angular/core
 import { FieldsetModule } from 'primeng/fieldset';
 import { DataService } from '../../services/data.service';
 import { CategoryEditComponent } from "./category-edit/category-edit.component";
-import { Category } from '../../models/models';
+import { Category, DbInfo } from '../../models/models';
 import { DbEditComponent } from "./db-edit/db-edit.component";
 
 @Component({
@@ -26,19 +26,23 @@ export class SettingsComponent implements AfterViewInit {
     this.dataService.setTemplatePortal(null);
   }
 
-  onDbAdd(dbName: string): void {
-    this.dataService.addDb(dbName);
-  }
-
   onCategoryChange(category: Category): void {
     this.dataService.updateCategory(category);
   }
 
-  onDbChange(dbName: string): void {
-    this.dataService.changeDb(dbName);
+  onDbAdd(dbName: string): void {
+    this.dataService.addDb(dbName);
   }
 
-  onDbDelete(dbName: string): void {
-    this.dataService.deleteDb(dbName);
+  onDbDelete(): void {
+    this.dataService.deleteDb();
+  }
+
+  onDbLoad(dbInfo: DbInfo): void {
+    this.dataService.loadDb(dbInfo);
+  }
+
+  onDbRename(dbInfo: DbInfo): void {
+    this.dataService.renameDb(dbInfo);
   }
 }

@@ -24,3 +24,8 @@ export interface TotalsItem {
   category: Category;
   total: number;
 }
+
+export interface DbInfo {
+  id: number;
+  name: string;
+}

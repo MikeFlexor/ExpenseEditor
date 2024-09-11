@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Category, Expense, TotalsItem } from '../models/models';
+import { Category, DbInfo, Expense, TotalsItem } from '../models/models';
 import { BehaviorSubject } from 'rxjs';
 import { TemplatePortal } from '@angular/cdk/portal';
 import { Db } from '../db/db';
@@ -12,34 +12,17 @@ export class DataService {
   categories$ = liveQuery(async () => await (this.db ? this.db.categories.toArray() : []));
   categoryExpenses$ = new BehaviorSubject<Expense[]>([]);
   db: Db | null = null;
-  dbNames$ = new BehaviorSubject<string[]>([]);
+  dbs$ = new BehaviorSubject<DbInfo[]>([]);
   expenses$ = liveQuery(async () => await (this.db ? this.db.expenses.toArray() : []));
   selectedDate$ = new BehaviorSubject<Date | null>(null);
+  selectedDb$ = new BehaviorSubject<DbInfo | null>(null);
   selectedTabId$ = new BehaviorSubject<number>(0);
   showDbNameEntering$ = new BehaviorSubject<boolean>(false);
   templatePortal$ = new BehaviorSubject<TemplatePortal | null>(null);
   totals$ = new BehaviorSubject<TotalsItem[]>([]);
   totalsSelectedCategory$ = new BehaviorSubject<TotalsItem | null>(null);
 
-  // private defaultCategories: Category[] = [
-  //   { id: 0, name: 'Еда' },
-  //   { id: 1, name: 'Коммунальные платежи' },
-  //   { id: 2, name: 'Одежда' },
-  //   { id: 3, name: 'Аптека' },
-  //   { id: 4, name: 'Машина' },
-  //   { id: 5, name: 'Бытовая химия' },
-  //   { id: 6, name: 'Для дома' },
-  // ];
-
   constructor() {
-    // this.db.categories.count().then((count) => {
-    //   if (count === 0) {
-    //     for (const category of this.defaultCategories) {
-    //       this.db.categories.add(category);
-    //     }
-    //   }
-    // });
-
     this.initDb();
   }
 
@@ -96,45 +79,79 @@ export class DataService {
     this.db?.categories.update(category.id, category);
   }
 
-  setNewDbName(name: string): void {
-    const dbNamesString = JSON.stringify([name]);
-    localStorage.setItem('dbNames', dbNamesString);
-    localStorage.setItem('selectedDbName', name);
-    this.dbNames$.next([name]);
-    this.db = new Db(name);
+  setNewDbName(dbName: string): void {
+    const newDb: DbInfo = { id: (new Date()).getTime(), name: dbName };
+    const dbsString = JSON.stringify([newDb]);
+    localStorage.setItem('dbs', dbsString);
+    localStorage.setItem('selectedDb', JSON.stringify(newDb));
+    this.dbs$.next([newDb]);
+    this.selectedDb$.next(newDb);
+    this.db = new Db(newDb.id.toString());
     this.showDbNameEntering$.next(false);
   }
 
   addDb(dbName: string): void {
-    const dbNames = this.dbNames$.value;
-    dbNames.push(dbName);
-    localStorage.setItem('selectedDbName', dbName);
-    localStorage.setItem('dbNames', JSON.stringify(dbNames));
-    this.dbNames$.next(dbNames);
-    this.db = new Db(dbName);
+    const newDb: DbInfo = { id: (new Date()).getTime(), name: dbName };
+    const dbs = this.dbs$.value;
+    dbs.push(newDb);
+    localStorage.setItem('dbs', JSON.stringify(dbs));
+    this.dbs$.next(dbs);
+    // localStorage.setItem('selectedDb', JSON.stringify(newDb));
+    // this.selectedDb$.next(newDb);
+    // this.db = new Db(newDb.id.toString());
   }
 
-  changeDb(dbName: string): void {
-    localStorage.setItem('selectedDbName', dbName);
-    this.db = new Db(dbName);
+  loadDb(db: DbInfo): void {
+    localStorage.setItem('selectedDb', JSON.stringify(db));
+    this.selectedDb$.next(db);
+    this.db = new Db(db.id.toString());
   }
 
-  deleteDb(dbName: string): void {
-    if (this.db) {
-      const dbNames = this.dbNames$.value;
-      this.db.delete();
-      if (dbNames.length === 1) {
-        localStorage.removeItem('selectedDbName');
-        localStorage.removeItem('dbNames');
-        this.showDbNameEntering$.next(true);
-      } else {
-        const deleteIndex = dbNames.indexOf(dbName);
-        dbNames.splice(deleteIndex, 1);
-        localStorage.setItem('selectedDbName', dbNames[0]);
-        localStorage.setItem('dbNames', JSON.stringify(dbNames));
-        this.dbNames$.next(dbNames);
-        this.db = new Db(dbNames[0]);
-      }
+  deleteDb(): void {
+    if (!this.db) {
+      return;
+    }
+
+    
+    const dbs = this.dbs$.value;
+    const foundDb = dbs.find((i) => i.id.toString() === this.db?.name);
+
+    if (!foundDb) {
+      return;
+    }
+
+    this.db.delete();
+
+    if (dbs.length === 1) {
+      localStorage.removeItem('selectedDb');
+      localStorage.removeItem('dbs');
+      this.dbs$.next([]);
+      this.selectedDb$.next(null);
+      this.showDbNameEntering$.next(true);
+    } else {
+      dbs.splice(dbs.indexOf(foundDb), 1);
+      localStorage.setItem('dbs', JSON.stringify(dbs));
+      localStorage.setItem('selectedDb', JSON.stringify(dbs[0]));
+      this.dbs$.next(dbs);
+      this.selectedDb$.next(dbs[0]);
+      this.db = new Db(dbs[0].id.toString());
+    }
+  }
+
+  renameDb(db: DbInfo): void {
+    const dbs = this.dbs$.value;
+    const foundDb = dbs.find((i) => i.id === db.id);
+
+    if (foundDb) {
+      foundDb.name = db.name;
+    }
+
+    localStorage.setItem('dbs', JSON.stringify(dbs));
+    this.dbs$.next(dbs);
+
+    if (this.selectedDb$.value?.id === db.id) {
+      localStorage.setItem('selectedDb', JSON.stringify(db));
+      this.selectedDb$.next(db);
     }
   }
 
@@ -170,35 +187,38 @@ export class DataService {
   }
 
   private initDb(): void {
-    const dbNamesString = localStorage.getItem('dbNames');
-    const selectedDbName = localStorage.getItem('selectedDbName');
+    const dbsString = localStorage.getItem('dbs');
+    const selectedDbString = localStorage.getItem('selectedDb');
 
     // Если в сторе не сохранено имя выбранной базы
-    if (!selectedDbName ) {
+    if (!selectedDbString ) {
       // Если в сторе не сохранен список баз, то даем ввести имя новой базы
-      if (!dbNamesString) {
+      if (!dbsString) {
         this.showDbNameEntering$.next(true);
       // Если в сторе сохранен список баз, то делаем выбранной первую из них
       } else {
-        const dbNames = JSON.parse(dbNamesString);
-        const selectedDbName = dbNames[0];
-        localStorage.setItem('selectedDbName', selectedDbName);
-        this.db = new Db(selectedDbName);
-        this.dbNames$.next(dbNames);
+        const dbs = JSON.parse(dbsString) as DbInfo[];
+        const selectedDb = dbs[0];
+        localStorage.setItem('selectedDb', JSON.stringify(selectedDb));
+        this.db = new Db(selectedDb.id.toString());
+        this.dbs$.next(dbs);
+        this.selectedDb$.next(selectedDb);
       }
     // Если в сторе сохранено имя выбранной базы
     } else {
+      const selectedDb = JSON.parse(selectedDbString) as DbInfo;
+      this.db = new Db(selectedDb.id.toString());
       // Если в сторе не сохранен список баз, то сохраняем его
-      if (!dbNamesString) {
-        const dbNamesString = JSON.stringify([selectedDbName]);
-        localStorage.setItem('dbNames', dbNamesString);
-        this.dbNames$.next([selectedDbName]);
+      if (!dbsString) {
+        localStorage.setItem('dbss', JSON.stringify([selectedDb]));
+        this.dbs$.next([selectedDb]);
+        this.selectedDb$.next(selectedDb);
       // Если в сторе сохранен список баз, то обновляем сабджект
       } else {
-        const dbNames = JSON.parse(dbNamesString);
-        this.dbNames$.next(dbNames);
+        const dbs = JSON.parse(dbsString) as DbInfo[];
+        this.dbs$.next(dbs);
+        this.selectedDb$.next(selectedDb);
       }
-      this.db = new Db(selectedDbName);
     }
   }
 }

@@ -1,9 +1,16 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Input,
+  Output
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { DropdownModule } from 'primeng/dropdown';
 import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
+import { DbInfo } from '../../../models/models';
 
 @Component({
   selector: 'app-db-edit',
@@ -19,37 +26,51 @@ import { ButtonModule } from 'primeng/button';
   styleUrl: './db-edit.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DbEditComponent implements OnInit {
-  @Input() dbNames: string[] = [];
-  @Input() selectedDb: string | undefined = undefined;
+export class DbEditComponent {
   @Output() addDb = new EventEmitter<string>();
-  @Output() changeDb = new EventEmitter<string>();
-  @Output() deleteDb = new EventEmitter<string>();
-  currentDb: string = '';
-  dbName: string = '';
-
-  ngOnInit(): void {
-    if (this.selectedDb) {
-      this.currentDb = this.selectedDb;
-    }
+  @Input() set currentDb(value: DbInfo | null) {
+    this.selectedDb = value;
+    this._currentDb = value;
+  };
+  get currentDb() {
+    return this._currentDb;
   }
+  dbName: string = '';
+  @Input() dbs: DbInfo[] = [];
+  @Output() deleteDb = new EventEmitter();
+  @Output() loadDb = new EventEmitter<DbInfo>();
+  @Output() renameDb = new EventEmitter<DbInfo>();
+  selectedDb: DbInfo | null = null;
+  private _currentDb: DbInfo | null = null;
 
   onAddClick(): void {
-    if (!this.dbNames.includes(this.dbName)) {
+    const existDb = this.dbs.find((i) => i.name === this.dbName);
+    if (!existDb) {
       this.addDb.emit(this.dbName);
       this.dbName = '';
     }
   }
 
-  onChangeClick(): void {
+  onLoadClick(): void {
     if (this.selectedDb) {
-      this.changeDb.emit(this.selectedDb);
+      this.loadDb.emit(this.selectedDb);
     }
   }
 
   onDeleteClick(): void {
-    if (this.selectedDb) {
-      this.deleteDb.emit(this.selectedDb);
+    this.deleteDb.emit();
+  }
+
+  onRenameClick(): void {
+    const existDb = this.dbs.find((i) => i.name === this.dbName);
+    if (!existDb && this.selectedDb && this.dbName.length) {
+      const db: DbInfo = {
+        id: this.selectedDb.id,
+        name: this.dbName
+      };
+      this.selectedDb = db;
+      this.renameDb.emit(db);
+      this.dbName = '';
     }
   }
 }

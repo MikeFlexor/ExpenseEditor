@@ -7,10 +7,11 @@
 
 <p-fieldset [toggleable]="true" legend="Хранение данных">
   <app-db-edit
-    [dbNames]="(dataService.dbNames$ | async) || []"
-    [selectedDb]="dataService.db?.name"
+    [dbs]="(dataService.dbs$ | async) || []"
+    [currentDb]="dataService.selectedDb$ | async"
     (addDb)="onDbAdd($event)"
-    (changeDb)="onDbChange($event)"
-    (deleteDb)="onDbDelete($event)"
+    (loadDb)="onDbLoad($event)"
+    (deleteDb)="onDbDelete()"
+    (renameDb)="onDbRename($event)"
   ></app-db-edit>
 </p-fieldset>

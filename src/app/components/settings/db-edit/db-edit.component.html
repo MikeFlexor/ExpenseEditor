@@ -1,8 +1,13 @@
+<div style="font-weight: 500;">
+  Текущая база: {{ currentDb ? currentDb.name : '' }}
+</div>
+
 <div>
   <p-dropdown
     [(ngModel)]="selectedDb"
     [appendTo]="'body'"
-    [options]="dbNames"
+    [options]="dbs"
+    optionLabel="name"
   ></p-dropdown>
 
   <input
@@ -15,20 +20,25 @@
 
 <div>
   <p-button
-    [disabled]="!selectedDb || selectedDb === currentDb"
-    (click)="onChangeClick()"
+    [disabled]="!selectedDb || selectedDb.id === currentDb?.id"
+    (onClick)="onLoadClick()"
     label="Переключиться на выбранную базу"
   ></p-button>
 
   <p-button
-    [disabled]="!selectedDb"
-    (click)="onDeleteClick()"
-    label="Удалить выбранную базу"
+    (onClick)="onDeleteClick()"
+    label="Удалить текущую базу"
   ></p-button>
 
   <p-button
     [disabled]="!dbName.length"
-    (click)="onAddClick()"
+    (onClick)="onAddClick()"
     label="Добавить новую базу"
+  ></p-button>
+
+  <p-button
+    [disabled]="!dbName.length"
+    (onClick)="onRenameClick()"
+    label="Переименовать выбранную базу"
   ></p-button>
 </div>
