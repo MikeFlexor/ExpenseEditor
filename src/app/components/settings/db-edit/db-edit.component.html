@@ -42,3 +42,12 @@
     label="Переименовать выбранную базу"
   ></p-button>
 </div>
+
+<div>
+  <p-checkbox
+    [(ngModel)]="switchWhenAddingDb"
+    [binary]="true"
+    (ngModelChange)="onSwitchWhenAddingDbChange()"
+    label="Переключиться на новую базу при ее добавлении"
+  />
+</div>

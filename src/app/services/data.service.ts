@@ -14,13 +14,18 @@ export class DataService {
   db: Db | null = null;
   dbs$ = new BehaviorSubject<DbInfo[]>([]);
   expenses$ = liveQuery(async () => await (this.db ? this.db.expenses.toArray() : []));
+  lastSelectedCategory: Category | null = null;
+  lastSelectedDate: Date | null = null;
   selectedDate$ = new BehaviorSubject<Date | null>(null);
   selectedDb$ = new BehaviorSubject<DbInfo | null>(null);
   selectedTabId$ = new BehaviorSubject<number>(0);
   showDbNameEntering$ = new BehaviorSubject<boolean>(false);
+  switchWhenAddingDb$ = new BehaviorSubject<boolean>(false);
   templatePortal$ = new BehaviorSubject<TemplatePortal | null>(null);
   totals$ = new BehaviorSubject<TotalsItem[]>([]);
   totalsSelectedCategory$ = new BehaviorSubject<TotalsItem | null>(null);
+  useLastSelectedCategory: boolean = false;
+  useLastSelectedDate: boolean = true;
 
   constructor() {
     this.initDb();
@@ -96,9 +101,12 @@ export class DataService {
     dbs.push(newDb);
     localStorage.setItem('dbs', JSON.stringify(dbs));
     this.dbs$.next(dbs);
-    // localStorage.setItem('selectedDb', JSON.stringify(newDb));
-    // this.selectedDb$.next(newDb);
-    // this.db = new Db(newDb.id.toString());
+
+    if (this.switchWhenAddingDb$.value) {
+      localStorage.setItem('selectedDb', JSON.stringify(newDb));
+      this.selectedDb$.next(newDb);
+      this.db = new Db(newDb.id.toString());
+    }
   }
 
   loadDb(db: DbInfo): void {
@@ -153,6 +161,10 @@ export class DataService {
       localStorage.setItem('selectedDb', JSON.stringify(db));
       this.selectedDb$.next(db);
     }
+  }
+
+  setSwitchWhenAddingDb(value: boolean): void {
+    this.switchWhenAddingDb$.next(value);
   }
 
   private countTotals(): void {

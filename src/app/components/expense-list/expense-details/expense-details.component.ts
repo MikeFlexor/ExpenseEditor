@@ -30,7 +30,7 @@ import { Subscription } from 'rxjs';
 export class ExpenseDetailsComponent implements OnDestroy, OnInit {
   get buttonDisabled() {
     return this.date === undefined ||
-      this.selectedCategory === undefined ||
+      this.category === undefined ||
       this.price === undefined;
   }
   get canDelete() {
@@ -39,11 +39,39 @@ export class ExpenseDetailsComponent implements OnDestroy, OnInit {
   get addNewCategoryDisabled() {
     return this.newCategoryName.length === 0;
   }
-  date: Date | undefined;
+
+  get category(): Category | null {
+    if (this._category) {
+      return this._category;
+    } else if (this.dataService.useLastSelectedCategory) {
+      return this.dataService.lastSelectedCategory;
+    }
+    return null;
+  }
+  set category(category: Category) {
+    this._category = category;
+    this.dataService.lastSelectedCategory = category;
+  }
+
+  get date(): Date | null {
+    if (this._date) {
+      return this._date;
+    } else if (this.dataService.useLastSelectedDate) {
+      return this.dataService.lastSelectedDate;
+    }
+    return null;
+  }
+  set date(date: Date) {
+    this._date = date;
+    this.dataService.lastSelectedDate = date;
+  }
+
   newCategoryName: string = '';
   price: number | undefined;
-  selectedCategory: Category | undefined;
   subscription: Subscription = new Subscription();
+
+  private _category: Category | null = null;
+  private _date: Date | null = null;
 
   constructor(
     public dataService: DataService,
@@ -61,7 +89,11 @@ export class ExpenseDetailsComponent implements OnDestroy, OnInit {
       this.date = new Date(item.date);
       this.subscription.add(
         this.dataService.categories$.subscribe((categories) => {
-          this.selectedCategory = categories.find((i) => i.id === item.category.id);
+          const foundCategory = categories
+            .find((i) => i.id === item.category.id);
+          if (foundCategory) {
+            this.category = foundCategory;
+          }
         })
       );
       this.price = item.price;
@@ -69,11 +101,11 @@ export class ExpenseDetailsComponent implements OnDestroy, OnInit {
   }
 
   onAcceptClick(): void {
-    if (this.selectedCategory !== undefined && this.date) {
+    if (this.category && this.date) {
       this.dialogRef.close({
         expense: {
           date: this.date,
-          category: this.selectedCategory,
+          category: this.category,
           price: this.price
         },
         delete: false

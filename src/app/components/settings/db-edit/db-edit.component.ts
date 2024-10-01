@@ -11,6 +11,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
 import { DbInfo } from '../../../models/models';
+import { CheckboxModule } from 'primeng/checkbox';
 
 @Component({
   selector: 'app-db-edit',
@@ -20,7 +21,8 @@ import { DbInfo } from '../../../models/models';
     FormsModule,
     DropdownModule,
     InputTextModule,
-    ButtonModule
+    ButtonModule,
+    CheckboxModule
   ],
   templateUrl: './db-edit.component.html',
   styleUrl: './db-edit.component.scss',
@@ -41,6 +43,8 @@ export class DbEditComponent {
   @Output() loadDb = new EventEmitter<DbInfo>();
   @Output() renameDb = new EventEmitter<DbInfo>();
   selectedDb: DbInfo | null = null;
+  @Input() switchWhenAddingDb: boolean = false;
+  @Output() switchWhenAddingDbChange = new EventEmitter<boolean>();
   private _currentDb: DbInfo | null = null;
 
   onAddClick(): void {
@@ -72,5 +76,9 @@ export class DbEditComponent {
       this.renameDb.emit(db);
       this.dbName = '';
     }
+  }
+
+  onSwitchWhenAddingDbChange(): void {
+    this.switchWhenAddingDbChange.emit(this.switchWhenAddingDb);
   }
 }

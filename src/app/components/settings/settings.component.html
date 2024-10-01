@@ -1,3 +1,7 @@
+<p-fieldset [toggleable]="true" legend="Общие настройки">
+  <app-general-settings></app-general-settings>
+</p-fieldset>
+
 <p-fieldset [toggleable]="true" legend="Переименование категорий">
   <app-category-edit
     [categories]="(dataService.categories$ | async) || []"
@@ -9,9 +13,11 @@
   <app-db-edit
     [dbs]="(dataService.dbs$ | async) || []"
     [currentDb]="dataService.selectedDb$ | async"
+    [switchWhenAddingDb]="(dataService.switchWhenAddingDb$ | async) || false"
     (addDb)="onDbAdd($event)"
     (loadDb)="onDbLoad($event)"
     (deleteDb)="onDbDelete()"
     (renameDb)="onDbRename($event)"
+    (switchWhenAddingDbChange)="onSwitchWhenAddingDbChange($event)"
   ></app-db-edit>
 </p-fieldset>

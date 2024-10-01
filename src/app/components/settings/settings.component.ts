@@ -5,6 +5,7 @@ import { DataService } from '../../services/data.service';
 import { CategoryEditComponent } from "./category-edit/category-edit.component";
 import { Category, DbInfo } from '../../models/models';
 import { DbEditComponent } from "./db-edit/db-edit.component";
+import { GeneralSettingsComponent } from './general-settings/general-settings.component';
 
 @Component({
   selector: 'app-settings',
@@ -12,6 +13,7 @@ import { DbEditComponent } from "./db-edit/db-edit.component";
   imports: [
     CommonModule,
     FieldsetModule,
+    GeneralSettingsComponent,
     CategoryEditComponent,
     DbEditComponent
 ],
@@ -44,5 +46,9 @@ export class SettingsComponent implements AfterViewInit {
 
   onDbRename(dbInfo: DbInfo): void {
     this.dataService.renameDb(dbInfo);
+  }
+
+  onSwitchWhenAddingDbChange(value: boolean): void {
+    this.dataService.setSwitchWhenAddingDb(value);
   }
 }
