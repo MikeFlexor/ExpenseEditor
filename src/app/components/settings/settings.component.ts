@@ -49,6 +49,9 @@ export class SettingsComponent implements AfterViewInit {
   }
 
   onSwitchWhenAddingDbChange(value: boolean): void {
-    this.dataService.setSwitchWhenAddingDb(value);
+    this.dataService.updateSettings({
+      ...this.dataService.settings$.value,
+      switchWhenAddingDb: value
+    });
   }
 }

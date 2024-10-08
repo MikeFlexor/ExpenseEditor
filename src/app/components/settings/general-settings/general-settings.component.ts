@@ -18,4 +18,18 @@ import { DataService } from '../../../services/data.service';
 })
 export class GeneralSettingsComponent {
   constructor(public dataService: DataService) {}
+
+  onUseLastSelectedCategoryChange(value: boolean): void {
+    this.dataService.updateSettings({
+      ...this.dataService.settings$.value,
+      useLastSelectedCategory: value
+    });
+  }
+
+  onUseLastSelectedDateChange(value: boolean): void {
+    this.dataService.updateSettings({
+      ...this.dataService.settings$.value,
+      useLastSelectedDate: value
+    });
+  }
 }

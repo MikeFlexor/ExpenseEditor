@@ -1,10 +1,12 @@
 <p-checkbox
-  [(ngModel)]="dataService.useLastSelectedDate"
+  [ngModel]="(dataService.settings$ | async)?.useLastSelectedDate || false"
   [binary]="true"
+  (ngModelChange)="onUseLastSelectedDateChange($event)"
   label="При добавлении траты подставлять последнюю выбранную дату"
 />
 <p-checkbox
-  [(ngModel)]="dataService.useLastSelectedCategory"
+  [ngModel]="(dataService.settings$ | async)?.useLastSelectedCategory || false"
   [binary]="true"
+  (ngModelChange)="onUseLastSelectedCategoryChange($event)"
   label="При добавлении траты подставлять последнюю выбранную категорию"
 />

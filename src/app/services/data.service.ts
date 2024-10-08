@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Category, DbInfo, Expense, TotalsItem } from '../models/models';
+import { Category, DbInfo, Expense, Settings, TotalsItem } from '../models/models';
 import { BehaviorSubject } from 'rxjs';
 import { TemplatePortal } from '@angular/cdk/portal';
 import { Db } from '../db/db';
@@ -14,21 +14,24 @@ export class DataService {
   db: Db | null = null;
   dbs$ = new BehaviorSubject<DbInfo[]>([]);
   expenses$ = liveQuery(async () => await (this.db ? this.db.expenses.toArray() : []));
-  lastSelectedCategory: Category | null = null;
-  lastSelectedDate: Date | null = null;
   selectedDate$ = new BehaviorSubject<Date | null>(null);
   selectedDb$ = new BehaviorSubject<DbInfo | null>(null);
   selectedTabId$ = new BehaviorSubject<number>(0);
+  settings$ = new BehaviorSubject<Settings>({
+    lastSelectedDate: null,
+    useLastSelectedDate: true,
+    lastSelectedCategory: null,
+    useLastSelectedCategory: false,
+    switchWhenAddingDb: false
+  });
   showDbNameEntering$ = new BehaviorSubject<boolean>(false);
-  switchWhenAddingDb$ = new BehaviorSubject<boolean>(false);
   templatePortal$ = new BehaviorSubject<TemplatePortal | null>(null);
   totals$ = new BehaviorSubject<TotalsItem[]>([]);
   totalsSelectedCategory$ = new BehaviorSubject<TotalsItem | null>(null);
-  useLastSelectedCategory: boolean = false;
-  useLastSelectedDate: boolean = true;
 
   constructor() {
     this.initDb();
+    this.initSettings();
   }
 
   addExpense(expense: Expense): void {
@@ -102,7 +105,7 @@ export class DataService {
     localStorage.setItem('dbs', JSON.stringify(dbs));
     this.dbs$.next(dbs);
 
-    if (this.switchWhenAddingDb$.value) {
+    if (this.settings$.value.switchWhenAddingDb) {
       localStorage.setItem('selectedDb', JSON.stringify(newDb));
       this.selectedDb$.next(newDb);
       this.db = new Db(newDb.id.toString());
@@ -120,7 +123,6 @@ export class DataService {
       return;
     }
 
-    
     const dbs = this.dbs$.value;
     const foundDb = dbs.find((i) => i.id.toString() === this.db?.name);
 
@@ -163,8 +165,9 @@ export class DataService {
     }
   }
 
-  setSwitchWhenAddingDb(value: boolean): void {
-    this.switchWhenAddingDb$.next(value);
+  updateSettings(settings: Settings): void {
+    this.settings$.next(settings);
+    localStorage.setItem('settings', JSON.stringify(settings));
   }
 
   private countTotals(): void {
@@ -231,6 +234,14 @@ export class DataService {
         this.dbs$.next(dbs);
         this.selectedDb$.next(selectedDb);
       }
+    }
+  }
+
+  private initSettings(): void {
+    const settingsString = localStorage.getItem('settings');
+    if (settingsString) {
+      const settings = JSON.parse(settingsString) as Settings;
+      this.settings$.next(settings);
     }
   }
 }

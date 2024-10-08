@@ -43,27 +43,39 @@ export class ExpenseDetailsComponent implements OnDestroy, OnInit {
   get category(): Category | null {
     if (this._category) {
       return this._category;
-    } else if (this.dataService.useLastSelectedCategory) {
-      return this.dataService.lastSelectedCategory;
+    } else if (this.dataService.settings$.value.useLastSelectedCategory &&
+      this.dataService.settings$.value.lastSelectedCategory)
+    {
+      this._category = this.dataService.settings$.value.lastSelectedCategory;
+      return this._category;
     }
     return null;
   }
   set category(category: Category) {
     this._category = category;
-    this.dataService.lastSelectedCategory = category;
+    this.dataService.updateSettings({
+      ...this.dataService.settings$.value,
+      lastSelectedCategory: category
+    });
   }
 
   get date(): Date | null {
     if (this._date) {
       return this._date;
-    } else if (this.dataService.useLastSelectedDate) {
-      return this.dataService.lastSelectedDate;
+    } else if (this.dataService.settings$.value.useLastSelectedDate &&
+      this.dataService.settings$.value.lastSelectedDate)
+    {
+      this._date = new Date(this.dataService.settings$.value.lastSelectedDate);
+      return this._date;
     }
     return null;
   }
   set date(date: Date) {
-    this._date = date;
-    this.dataService.lastSelectedDate = date;
+    this._date = new Date(date);
+    this.dataService.updateSettings({
+      ...this.dataService.settings$.value,
+      lastSelectedDate: new Date(date)
+    });
   }
 
   newCategoryName: string = '';

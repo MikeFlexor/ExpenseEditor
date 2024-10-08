@@ -13,7 +13,7 @@
   <app-db-edit
     [dbs]="(dataService.dbs$ | async) || []"
     [currentDb]="dataService.selectedDb$ | async"
-    [switchWhenAddingDb]="(dataService.switchWhenAddingDb$ | async) || false"
+    [switchWhenAddingDb]="(dataService.settings$ | async)?.switchWhenAddingDb || false"
     (addDb)="onDbAdd($event)"
     (loadDb)="onDbLoad($event)"
     (deleteDb)="onDbDelete()"

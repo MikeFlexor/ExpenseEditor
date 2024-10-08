@@ -29,3 +29,11 @@ export interface DbInfo {
   id: number;
   name: string;
 }
+
+export interface Settings {
+  lastSelectedDate: Date | null;
+  useLastSelectedDate: boolean;
+  lastSelectedCategory: Category | null;
+  useLastSelectedCategory: boolean;
+  switchWhenAddingDb: boolean;
+}
