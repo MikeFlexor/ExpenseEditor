@@ -12,6 +12,7 @@ import { Listbox, ListboxModule } from 'primeng/listbox';
 import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
 import { Category } from '../../../models/models';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-category-edit',
@@ -25,7 +26,7 @@ import { Category } from '../../../models/models';
   ],
   templateUrl: './category-edit.component.html',
   styleUrl: './category-edit.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CategoryEditComponent {
   @Input() categories: Category[] = [];
@@ -33,16 +34,28 @@ export class CategoryEditComponent {
   @ViewChild(Listbox) listbox: Listbox | undefined;
   selectedCategory: Category | null = null;
 
-  onRenameClick(name: string): void {
-    if (this.selectedCategory) {
-      this.categoryRename.emit({
-        id: this.selectedCategory.id,
-        name
-      } as Category);
-    }
+  constructor(private messageService: MessageService) {}
 
-    if (this.listbox) {
-      this.listbox.updateModel(this.categories);
+  onRenameClick(name: string): void {
+    const existCategory = this.categories.find((i) => i.name === name);
+
+    // Если уже есть категория с таким именем
+    if (existCategory) {
+      this.messageService.add({
+        severity: 'warn',
+        detail: `Категория "${name}" уже существует. Введите другое имя`
+      });
+    } else {
+      if (this.selectedCategory) {
+        this.categoryRename.emit({
+          id: this.selectedCategory.id,
+          name
+        } as Category);
+      }
+
+      if (this.listbox) {
+        this.listbox.updateModel(this.categories);
+      }
     }
   }
 }
