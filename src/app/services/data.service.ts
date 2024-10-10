@@ -4,6 +4,7 @@ import { BehaviorSubject } from 'rxjs';
 import { TemplatePortal } from '@angular/cdk/portal';
 import { Db } from '../db/db';
 import { liveQuery } from 'dexie';
+import { MessageService } from 'primeng/api';
 
 @Injectable({
   providedIn: 'root'
@@ -29,7 +30,7 @@ export class DataService {
   totals$ = new BehaviorSubject<TotalsItem[]>([]);
   totalsSelectedCategory$ = new BehaviorSubject<TotalsItem | null>(null);
 
-  constructor() {
+  constructor(private messageService: MessageService) {
     this.initDb();
     this.initSettings();
   }
@@ -84,7 +85,13 @@ export class DataService {
   }
 
   updateCategory(category: Category): void {
-    this.db?.categories.update(category.id, category);
+    this.db?.categories.get(category.id).then((categoryToUpdate) => {
+      this.db?.categories.update(category.id, category);
+      this.messageService.add({
+        severity: 'success',
+        detail: `Категория "${categoryToUpdate?.name}" переименована в "${category.name}"`
+      });
+    });
   }
 
   setNewDbName(dbName: string): void {
@@ -109,6 +116,15 @@ export class DataService {
       localStorage.setItem('selectedDb', JSON.stringify(newDb));
       this.selectedDb$.next(newDb);
       this.db = new Db(newDb.id.toString());
+      this.messageService.add({
+        severity: 'success',
+        detail: `Добавлена новая база "${dbName}" и переключено на нее`
+      });
+    } else {
+      this.messageService.add({
+        severity: 'success',
+        detail: `Добавлена новая база "${dbName}"`
+      });
     }
   }
 
@@ -116,6 +132,11 @@ export class DataService {
     localStorage.setItem('selectedDb', JSON.stringify(db));
     this.selectedDb$.next(db);
     this.db = new Db(db.id.toString());
+
+    this.messageService.add({
+      severity: 'success',
+      detail: `Переключено на базу "${db.name}"`
+    });
   }
 
   deleteDb(): void {
@@ -138,6 +159,10 @@ export class DataService {
       this.dbs$.next([]);
       this.selectedDb$.next(null);
       this.showDbNameEntering$.next(true);
+      this.messageService.add({
+        severity: 'success',
+        detail: `База "${foundDb.name}" удалена`
+      });
     } else {
       dbs.splice(dbs.indexOf(foundDb), 1);
       localStorage.setItem('dbs', JSON.stringify(dbs));
@@ -145,14 +170,20 @@ export class DataService {
       this.dbs$.next(dbs);
       this.selectedDb$.next(dbs[0]);
       this.db = new Db(dbs[0].id.toString());
+      this.messageService.add({
+        severity: 'success',
+        detail: `База "${foundDb.name}" удалена. Переключено на базу "${dbs[0].name}"`
+      });
     }
   }
 
   renameDb(db: DbInfo): void {
     const dbs = this.dbs$.value;
     const foundDb = dbs.find((i) => i.id === db.id);
+    let currentName = '';
 
     if (foundDb) {
+      currentName = foundDb.name;
       foundDb.name = db.name;
     }
 
@@ -163,6 +194,11 @@ export class DataService {
       localStorage.setItem('selectedDb', JSON.stringify(db));
       this.selectedDb$.next(db);
     }
+
+    this.messageService.add({
+      severity: 'success',
+      detail: `База "${currentName}" переименована в "${db.name}"`
+    });
   }
 
   updateSettings(settings: Settings): void {

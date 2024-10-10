@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { PrimeNGConfig } from 'primeng/api';
+import { ConfirmationService, MessageService, PrimeNGConfig } from 'primeng/api';
 import { SidebarComponent } from "./components/sidebar/sidebar.component";
 import { CommonModule } from '@angular/common';
 import { ExpenseListComponent } from './components/expense-list/expense-list.component';
@@ -8,6 +8,8 @@ import { PivotTableComponent } from './components/pivot-table/pivot-table.compon
 import { SettingsComponent } from './components/settings/settings.component';
 import { DataService } from './services/data.service';
 import { DbNameEnteringComponent } from './components/db-name-entering/db-name-entering.component';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { ToastModule } from 'primeng/toast';
 
 @Component({
   selector: 'app-root',
@@ -19,15 +21,21 @@ import { DbNameEnteringComponent } from './components/db-name-entering/db-name-e
     ExpenseListComponent,
     PivotTableComponent,
     SettingsComponent,
-    DbNameEnteringComponent
+    DbNameEnteringComponent,
+    ConfirmDialogModule,
+    ToastModule
 ],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.scss'
+  styleUrl: './app.component.scss',
+  providers: [ConfirmationService, MessageService, DataService]
 })
 export class AppComponent {
   title = 'Expense editor';
 
-  constructor(public dataService: DataService, private primengConfig: PrimeNGConfig) {
+  constructor(
+    public dataService: DataService,
+    private primengConfig: PrimeNGConfig
+  ) {
     this.primengConfig.setTranslation({
       firstDayOfWeek: 1,
       dayNames: ["Воскресенье", "Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота"],

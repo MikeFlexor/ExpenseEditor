@@ -1,20 +1,17 @@
 <ng-template #portalContent>
   <p-button
-    [outlined]="true"
     (click)="onAddClick()"
     label="Добавить трату"
   ></p-button>
 
   <p-button
     [disabled]="!selectedExpense"
-    [outlined]="true"
     (click)="onRowDblClick(selectedExpense)"
     label="Изменить трату"
   ></p-button>
 
   <p-button
     [disabled]="!selectedExpense"
-    [outlined]="true"
     (click)="onDeleteClick(selectedExpense)"
     label="Удалить трату"
   ></p-button>

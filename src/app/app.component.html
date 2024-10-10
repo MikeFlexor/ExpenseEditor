@@ -1,3 +1,21 @@
+<p-confirmDialog #cd header="Подтвердите действие">
+  <p-footer>
+    <div class="confirm-dialog-buttons">
+      <p-button
+        (onClick)="cd.accept()"
+        class="accept-button"
+        label="Да"
+      ></p-button>
+      <p-button
+        (onClick)="cd.reject()"
+        label="Нет"
+      ></p-button>
+    </div>
+  </p-footer>
+</p-confirmDialog>
+
+<p-toast />
+
 <ng-container *ngIf="!(dataService.showDbNameEntering$ | async); else showDbNameEnteringTemplate">
   <app-sidebar></app-sidebar>
   <div class="content">

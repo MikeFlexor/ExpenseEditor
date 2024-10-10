@@ -7,4 +7,13 @@
     width: 100%;
     min-height: 0;
   }
+
+  .confirm-dialog-buttons {
+    display: flex;
+    justify-content: flex-end;
+
+    .accept-button {
+      margin-right: 0.3rem;
+    }
+  }
 }
