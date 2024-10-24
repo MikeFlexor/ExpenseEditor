@@ -2,9 +2,10 @@
   <app-general-settings></app-general-settings>
 </p-fieldset>
 
-<p-fieldset [toggleable]="true" legend="Переименование категорий">
+<p-fieldset [toggleable]="true" legend="Редактирование категорий">
   <app-category-edit
     [categories]="(dataService.categories$ | async) || []"
+    (categoryAdd)="onCategoryAdd($event)"
     (categoryRename)="onCategoryChange($event)"
   ></app-category-edit>
 </p-fieldset>

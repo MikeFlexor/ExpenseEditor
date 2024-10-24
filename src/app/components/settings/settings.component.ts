@@ -28,6 +28,10 @@ export class SettingsComponent implements AfterViewInit {
     this.dataService.setTemplatePortal(null);
   }
 
+  onCategoryAdd(name: string): void {
+    this.dataService.addCategory(name);
+  }
+
   onCategoryChange(category: Category): void {
     this.dataService.updateCategory(category);
   }

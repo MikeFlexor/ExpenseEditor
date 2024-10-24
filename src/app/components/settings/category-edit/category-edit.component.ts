@@ -4,11 +4,10 @@ import {
   Component,
   EventEmitter,
   Input,
-  Output,
-  ViewChild
+  Output
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Listbox, ListboxModule } from 'primeng/listbox';
+import { ListboxModule } from 'primeng/listbox';
 import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
 import { Category } from '../../../models/models';
@@ -30,13 +29,37 @@ import { MessageService } from 'primeng/api';
 })
 export class CategoryEditComponent {
   @Input() categories: Category[] = [];
+  @Output() categoryAdd = new EventEmitter<string>();
+  categoryName: string = '';
   @Output() categoryRename = new EventEmitter<Category>();
-  @ViewChild(Listbox) listbox: Listbox | undefined;
   selectedCategory: Category | null = null;
 
   constructor(private messageService: MessageService) {}
 
+  onAddClick(name: string): void {
+    this.checkForExistingName(name, () => {
+      this.categoryAdd.emit(name);
+    });
+  }
+
   onRenameClick(name: string): void {
+    this.checkForExistingName(name, () => {
+      if (this.selectedCategory) {
+        this.categoryRename.emit({
+          id: this.selectedCategory.id,
+          name
+        } as Category);
+      }
+    });
+  }
+
+  onSelectedCategoryChange(): void {
+    if (this.selectedCategory && this.selectedCategory.name) {
+      this.categoryName = this.selectedCategory.name;
+    }
+  }
+
+  private checkForExistingName(name: string, code: () => void): void {
     const existCategory = this.categories.find((i) => i.name === name);
 
     // Если уже есть категория с таким именем
@@ -45,17 +68,11 @@ export class CategoryEditComponent {
         severity: 'warn',
         detail: `Категория "${name}" уже существует. Введите другое имя`
       });
+    // Если категории с таким именем нет, то выполняем переданный код
     } else {
-      if (this.selectedCategory) {
-        this.categoryRename.emit({
-          id: this.selectedCategory.id,
-          name
-        } as Category);
-      }
-
-      if (this.listbox) {
-        this.listbox.updateModel(this.categories);
-      }
+      code();
+      this.categoryName = '';
+      this.selectedCategory = null;
     }
   }
 }

@@ -26,7 +26,7 @@
       />
       <button
         [disabled]="addNewCategoryDisabled"
-        (click)="onAddCategoryClick()"
+        (onClick)="onAddCategoryClick()"
         icon="pi pi-plus"
         pButton
         size="small"
@@ -44,14 +44,14 @@
 <div class="buttons">
   <p-button
     [ngClass]="{'hidden': !canDelete}"
-    (click)="onDeleteClick()"
+    (onClick)="onDeleteClick()"
     class="delete-button"
     label="Удалить"
   ></p-button>
 
   <p-button
     [disabled]="buttonDisabled"
-    (click)="onAcceptClick()"
+    (onClick)="onAcceptClick()"
     label="Принять"
   ></p-button>
 </div>
