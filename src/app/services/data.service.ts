@@ -48,7 +48,12 @@ export class DataService {
   }
 
   addCategory(name: string): void {
-    this.db?.categories.add({ name } as Category);
+    this.db?.categories.add({ name } as Category).then(() => {
+      this.messageService.add({
+        severity: 'success',
+        detail: `Добавлена новая категория "${name}"`
+      });
+    });
   }
 
   updateCategoryExpenses(totalsItem?: TotalsItem, date?: Date): void {

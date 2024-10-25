@@ -10,6 +10,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { InputGroupModule } from 'primeng/inputgroup';
 import { DataService } from '../../../services/data.service';
 import { Subscription } from 'rxjs';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-expense-details',
@@ -82,13 +83,15 @@ export class ExpenseDetailsComponent implements OnDestroy, OnInit {
   price: number | undefined;
   subscription: Subscription = new Subscription();
 
+  private _categories: Category[] = [];
   private _category: Category | null = null;
   private _date: Date | null = null;
 
   constructor(
     public dataService: DataService,
     private config: DynamicDialogConfig,
-    private dialogRef: DynamicDialogRef
+    private dialogRef: DynamicDialogRef,
+    private messageService: MessageService
   ) {}
 
   ngOnDestroy(): void {
@@ -96,20 +99,23 @@ export class ExpenseDetailsComponent implements OnDestroy, OnInit {
   }
 
   ngOnInit(): void {
-    const item: Expense = this.config.data;
-    if (item !== null) {
-      this.date = new Date(item.date);
-      this.subscription.add(
-        this.dataService.categories$.subscribe((categories) => {
-          const foundCategory = categories
+    this.subscription.add(
+      this.dataService.categories$.subscribe((categories) => {
+        this._categories = categories;
+
+        const item: Expense = this.config.data;
+
+        if (item !== null) {
+          this.date = new Date(item.date);
+          const foundCategory = this._categories
             .find((i) => i.id === item.category.id);
           if (foundCategory) {
             this.category = foundCategory;
           }
-        })
-      );
-      this.price = item.price;
-    }
+          this.price = item.price;
+        }
+      })
+    );
   }
 
   onAcceptClick(): void {
@@ -133,7 +139,19 @@ export class ExpenseDetailsComponent implements OnDestroy, OnInit {
   }
 
   onAddCategoryClick(): void {
-    this.dataService.addCategory(this.newCategoryName);
-    this.newCategoryName = '';
+    const existCategory = this._categories
+      .find((i) => i.name === this.newCategoryName);
+
+    // Если уже есть категория с таким именем
+    if (existCategory) {
+      this.messageService.add({
+        severity: 'warn',
+        detail: `Категория "${this.newCategoryName}" уже существует. Введите другое имя`
+      });
+    // Если категории с таким именем нет, то добавляем
+    } else {
+      this.dataService.addCategory(this.newCategoryName);
+      this.newCategoryName = '';
+    }
   }
 }
