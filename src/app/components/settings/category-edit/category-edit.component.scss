@@ -15,4 +15,25 @@
     flex-direction: row;
     grid-gap: 8px;
   }
+
+  ::ng-deep p-colorPicker {
+    &.not-color {
+      .p-colorpicker {
+        .p-colorpicker-preview {
+          background: linear-gradient(to top left,
+            rgba(0,0,0,0) 0%,
+            rgba(0,0,0,0) calc(50% - 2px),
+            rgba(255,0,0,1) 50%,
+            rgba(0,0,0,0) calc(50% + 2px),
+            rgba(0,0,0,0) 100%),
+          linear-gradient(to top right,
+            rgba(0,0,0,0) 0%,
+            rgba(0,0,0,0) calc(50% - 2px),
+            rgba(255,0,0,1) 50%,
+            rgba(0,0,0,0) calc(50% + 2px),
+            rgba(0,0,0,0) 100%) !important;
+        }
+      }
+    }
+  }
 }

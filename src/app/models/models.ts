@@ -13,6 +13,7 @@ export interface Expense {
 export interface Category {
   id: number;
   name: string;
+  color: string;
 }
 
 export interface ExpenseDetailsData {
@@ -36,4 +37,10 @@ export interface Settings {
   lastSelectedCategory: Category | null;
   useLastSelectedCategory: boolean;
   switchWhenAddingDb: boolean;
+  currentDefaultColor: number;
+}
+
+export interface CategoryChange {
+  name: string;
+  color: string | null;
 }

@@ -23,12 +23,18 @@ export class DataService {
     useLastSelectedDate: true,
     lastSelectedCategory: null,
     useLastSelectedCategory: false,
-    switchWhenAddingDb: false
+    switchWhenAddingDb: false,
+    currentDefaultColor: 0
   });
   showDbNameEntering$ = new BehaviorSubject<boolean>(false);
   templatePortal$ = new BehaviorSubject<TemplatePortal | null>(null);
   totals$ = new BehaviorSubject<TotalsItem[]>([]);
   totalsSelectedCategory$ = new BehaviorSubject<TotalsItem | null>(null);
+  readonly defaultColors: string[] = [
+    '#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff',
+    '#800000', '#008000', '#000080', '#808000', '#800080', '#008080',
+    '#000000', '#808080'
+  ];
 
   constructor(private messageService: MessageService) {
     this.initDb();
@@ -47,8 +53,24 @@ export class DataService {
     this.db?.expenses.delete(expense.id);
   }
 
-  addCategory(name: string): void {
-    this.db?.categories.add({ name } as Category).then(() => {
+  addCategory(name: string, color: string | null): void {
+    if (!color) {
+      let currentDefaultColor = this.settings$.value.currentDefaultColor;
+
+      if (currentDefaultColor === this.defaultColors.length) {
+        currentDefaultColor = 0;
+      }
+
+      color = this.defaultColors[currentDefaultColor];
+      currentDefaultColor++;
+
+      this.updateSettings({
+        ...this.settings$.value,
+        currentDefaultColor: currentDefaultColor
+      });
+    }
+
+    this.db?.categories.add({ name, color } as Category).then(() => {
       this.messageService.add({
         severity: 'success',
         detail: `Добавлена новая категория "${name}"`
@@ -91,11 +113,23 @@ export class DataService {
 
   updateCategory(category: Category): void {
     this.db?.categories.get(category.id).then((categoryToUpdate) => {
-      this.db?.categories.update(category.id, category);
-      this.messageService.add({
-        severity: 'success',
-        detail: `Категория "${categoryToUpdate?.name}" переименована в "${category.name}"`
-      });
+      if (this.db && categoryToUpdate) {
+        this.db.categories.update(category.id, category);
+
+        if (categoryToUpdate.name !== category.name) {
+          this.messageService.add({
+            severity: 'success',
+            detail: `Категория "${categoryToUpdate?.name}" переименована в "${category.name}"`
+          });
+        }
+
+        if (categoryToUpdate.color !== category.color) {
+          this.messageService.add({
+            severity: 'success',
+            detail: `Цвет категории "${category.name}" изменен`
+          });
+        }
+      }
     });
   }
 

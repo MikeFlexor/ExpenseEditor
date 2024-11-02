@@ -1,0 +1,14 @@
+:host {
+  .category-item {
+    display: flex;
+    flex-direction: row;
+    grid-gap: 8px;
+    width: 100%;
+    height: 100%
+  }
+
+  .category-color {
+    display: block;
+    width: 30px;
+  }
+}

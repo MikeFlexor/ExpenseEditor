@@ -11,6 +11,7 @@ import { InputGroupModule } from 'primeng/inputgroup';
 import { DataService } from '../../../services/data.service';
 import { Subscription } from 'rxjs';
 import { MessageService } from 'primeng/api';
+import { ColoredCategoryItemComponent } from '../../colored-category-item/colored-category-item.component';
 
 @Component({
   selector: 'app-expense-details',
@@ -22,7 +23,8 @@ import { MessageService } from 'primeng/api';
     DropdownModule,
     InputNumberModule,
     InputTextModule,
-    InputGroupModule
+    InputGroupModule,
+    ColoredCategoryItemComponent
   ],
   templateUrl: './expense-details.component.html',
   styleUrl: './expense-details.component.scss',
@@ -150,7 +152,7 @@ export class ExpenseDetailsComponent implements OnDestroy, OnInit {
       });
     // Если категории с таким именем нет, то добавляем
     } else {
-      this.dataService.addCategory(this.newCategoryName);
+      this.dataService.addCategory(this.newCategoryName, null);
       this.newCategoryName = '';
     }
   }

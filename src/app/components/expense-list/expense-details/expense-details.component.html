@@ -33,6 +33,18 @@
       ></button>
     </p-inputGroup>
   </ng-template>
+
+  <ng-template let-category pTemplate="item">
+    <app-colored-category-item
+      [category]="category"
+    ></app-colored-category-item>
+  </ng-template>
+
+  <ng-template let-category pTemplate="selectedItem">
+    <app-colored-category-item
+      [category]="category"
+    ></app-colored-category-item>
+  </ng-template>
 </p-dropdown>
 
 <p-inputNumber

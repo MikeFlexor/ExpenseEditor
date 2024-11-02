@@ -10,8 +10,10 @@ import { FormsModule } from '@angular/forms';
 import { ListboxModule } from 'primeng/listbox';
 import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
-import { Category } from '../../../models/models';
+import { Category, CategoryChange } from '../../../models/models';
 import { MessageService } from 'primeng/api';
+import { ColorPickerModule } from 'primeng/colorpicker';
+import { ColoredCategoryItemComponent } from '../../colored-category-item/colored-category-item.component';
 
 @Component({
   selector: 'app-category-edit',
@@ -21,7 +23,9 @@ import { MessageService } from 'primeng/api';
     FormsModule,
     ListboxModule,
     InputTextModule,
-    ButtonModule
+    ButtonModule,
+    ColorPickerModule,
+    ColoredCategoryItemComponent
   ],
   templateUrl: './category-edit.component.html',
   styleUrl: './category-edit.component.scss',
@@ -29,33 +33,54 @@ import { MessageService } from 'primeng/api';
 })
 export class CategoryEditComponent {
   @Input() categories: Category[] = [];
-  @Output() categoryAdd = new EventEmitter<string>();
+  @Output() categoryAdd = new EventEmitter<CategoryChange>();
+  categoryColor: string | null = null;
   categoryName: string = '';
-  @Output() categoryRename = new EventEmitter<Category>();
+  @Output() categoryChange = new EventEmitter<Category>();
   selectedCategory: Category | null = null;
 
   constructor(private messageService: MessageService) {}
 
-  onAddClick(name: string): void {
-    this.checkForExistingName(name, () => {
-      this.categoryAdd.emit(name);
+  onAddClick(): void {
+    this.checkForExistingName(this.categoryName, () => {
+      this.categoryAdd.emit({
+        name: this.categoryName,
+        color: this.categoryColor
+      } as CategoryChange);
+      this.categoryColor = null;
     });
   }
 
-  onRenameClick(name: string): void {
-    this.checkForExistingName(name, () => {
+  onColorChange(): void {
+    if (this.selectedCategory) {
+      if (this.categoryColor) {
+        this.selectedCategory.color = this.categoryColor;
+      }
+      this.categoryChange.emit(this.selectedCategory);
+    }
+  }
+
+  onRenameClick(): void {
+    this.checkForExistingName(this.categoryName, () => {
       if (this.selectedCategory) {
-        this.categoryRename.emit({
+        this.categoryChange.emit({
           id: this.selectedCategory.id,
-          name
+          name: this.categoryName,
+          color: this.selectedCategory.color
         } as Category);
       }
     });
   }
 
   onSelectedCategoryChange(): void {
-    if (this.selectedCategory && this.selectedCategory.name) {
+    if (this.selectedCategory) {
       this.categoryName = this.selectedCategory.name;
+      this.categoryColor = this.selectedCategory.color;
+    }
+
+    if (!this.selectedCategory) {
+      this.categoryName = '';
+      this.categoryColor = null;
     }
   }
 

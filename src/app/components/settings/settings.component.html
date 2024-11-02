@@ -6,7 +6,7 @@
   <app-category-edit
     [categories]="(dataService.categories$ | async) || []"
     (categoryAdd)="onCategoryAdd($event)"
-    (categoryRename)="onCategoryChange($event)"
+    (categoryChange)="onCategoryChange($event)"
   ></app-category-edit>
 </p-fieldset>
 

@@ -22,7 +22,11 @@
 
   <ng-template pTemplate="body" let-item>
     <tr [pSelectableRow]="item">
-      <td>{{ item.category.name }}</td>
+      <td>
+        <app-colored-category-item
+          [category]="item.category"
+        ></app-colored-category-item>
+      </td>
       <td>{{ item.total }}</td>
     </tr>
   </ng-template>

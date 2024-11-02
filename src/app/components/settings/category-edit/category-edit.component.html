@@ -5,11 +5,16 @@
   [style]="{'width': '450px', 'min-height': '150px'}"
   (ngModelChange)="onSelectedCategoryChange()"
   optionLabel="name"
-/>
+>
+  <ng-template let-category pTemplate="item">
+    <app-colored-category-item
+      [category]="category"
+    ></app-colored-category-item>
+  </ng-template>
+</p-listbox>
 
 <div class="edit-container">
   <input
-    #categoryInput
     [(ngModel)]="categoryName"
     pInputText
     type="text"
@@ -17,17 +22,24 @@
 
   <div class="buttons">
     <p-button
-      [disabled]="!categoryInput.value.length"
+      [disabled]="!categoryName.length"
       [style]="{'width': '170px'}"
-      (onClick)="onAddClick(categoryInput.value)"
+      (onClick)="onAddClick()"
       label="Добавить"
     ></p-button>
 
     <p-button
-      [disabled]="!selectedCategory || !categoryInput.value.length"
+      [disabled]="!selectedCategory || !categoryName.length"
       [style]="{'width': '170px'}"
-      (onClick)="onRenameClick(categoryInput.value)"
+      (onClick)="onRenameClick()"
       label="Переименовать"
     ></p-button>
   </div>
+
+  <p-colorPicker
+    [(ngModel)]="categoryColor"
+    [disabled]="!categoryName.length"
+    [ngClass]="{'not-color': !categoryColor}"
+    (onHide)="onColorChange()"
+  />
 </div>

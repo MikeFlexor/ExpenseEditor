@@ -3,13 +3,15 @@ import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { TableModule } from 'primeng/table';
 import { DataService } from '../../../services/data.service';
 import { TotalsItem } from '../../../models/models';
+import { ColoredCategoryItemComponent } from '../../colored-category-item/colored-category-item.component';
 
 @Component({
   selector: 'app-totals',
   standalone: true,
   imports: [
     CommonModule,
-    TableModule
+    TableModule,
+    ColoredCategoryItemComponent
   ],
   templateUrl: './totals.component.html',
   styleUrl: './totals.component.scss',

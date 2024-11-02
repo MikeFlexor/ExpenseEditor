@@ -16,6 +16,7 @@ import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { ExpenseDetailsComponent } from './expense-details/expense-details.component';
 import { DataService } from '../../services/data.service';
 import { TemplatePortal } from '@angular/cdk/portal';
+import { ColoredCategoryItemComponent } from '../colored-category-item/colored-category-item.component';
 
 @Component({
   selector: 'app-expense-list',
@@ -24,7 +25,8 @@ import { TemplatePortal } from '@angular/cdk/portal';
     CommonModule,
     TableModule,
     FormsModule,
-    ButtonModule
+    ButtonModule,
+    ColoredCategoryItemComponent
   ],
   providers: [DialogService],
   templateUrl: './expense-list.component.html',
